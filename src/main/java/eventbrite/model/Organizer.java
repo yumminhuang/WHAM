@@ -9,9 +9,8 @@ public class Organizer {
     private long id;
 
     private String name;
-    private MultipartText description;
+    private String description;
     private String url;
-
 
     public String getName() {
         return name;
@@ -27,5 +26,13 @@ public class Organizer {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

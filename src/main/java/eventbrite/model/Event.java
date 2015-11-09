@@ -1,8 +1,5 @@
 package eventbrite.model;
 
-import com.google.gson.annotations.SerializedName;
-import java.lang.reflect.Type;
-import com.google.gson.reflect.TypeToken;
 import org.joda.time.DateTime;
 
 /**
@@ -11,34 +8,33 @@ import org.joda.time.DateTime;
  * Date: 15/11/6
  */
 public class Event {
-    @SerializedName("id")
     private long id;
-
-    private MultipartText name;
-    private MultipartText description;
-    @SerializedName("url")
+    private String name;
     private String url;
-    private DatetimeTZ start;
-    private DatetimeTZ end;
-    @SerializedName("created")
-    private DateTime created;
-    @SerializedName("changed")
-    private DateTime changed;
-    @SerializedName("capacity")
+    private DateTime startTime;
+    private DateTime endTime;
     private int capacity;
-    @SerializedName("status")
-    private String status;
-    @SerializedName("currency")
-    private String currency;
-    @SerializedName("online_event")
-    private boolean onlineEvent;
+    private EventStatus status;
 
     private long venueID;
     private long organizerID;
-    private long categoryID;
+    private long CategoryID;
+    private long SubCategoryID;
 
-    public static Type getType() {
-        return TypeToken.get(Event.class).getType();
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUrl() {
@@ -49,20 +45,20 @@ public class Event {
         this.url = url;
     }
 
-    public DateTime getCreated() {
-        return created;
+    public DateTime getStartTime() {
+        return startTime;
     }
 
-    public void setCreated(DateTime created) {
-        this.created = created;
+    public void setStartTime(DateTime startTime) {
+        this.startTime = startTime;
     }
 
-    public DateTime getChanged() {
-        return changed;
+    public DateTime getEndTime() {
+        return endTime;
     }
 
-    public void setChanged(DateTime changed) {
-        this.changed = changed;
+    public void setEndTime(DateTime endTime) {
+        this.endTime = endTime;
     }
 
     public int getCapacity() {
@@ -73,20 +69,12 @@ public class Event {
         this.capacity = capacity;
     }
 
-    public String getStatus() {
+    public EventStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(EventStatus status) {
         this.status = status;
-    }
-
-    public boolean isOnlineEvent() {
-        return onlineEvent;
-    }
-
-    public void setOnlineEvent(boolean onlineEvent) {
-        this.onlineEvent = onlineEvent;
     }
 
     public long getVenueID() {
@@ -106,10 +94,24 @@ public class Event {
     }
 
     public long getCategoryID() {
-        return categoryID;
+        return CategoryID;
     }
 
     public void setCategoryID(long categoryID) {
-        this.categoryID = categoryID;
+        CategoryID = categoryID;
     }
+
+    public long getSubCategoryID() {
+        return SubCategoryID;
+    }
+
+    public void setSubCategoryID(long subCategoryID) {
+        SubCategoryID = subCategoryID;
+    }
+
+    @Override
+    public String toString() {
+        return "Event: " + this.name;
+    }
+
 }
