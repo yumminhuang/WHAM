@@ -11,7 +11,7 @@ import eventbrite.model.Event;
  * Date: 15/11/6
  */
 
-public class EventsResult extends BaseResult {
+public class EventsSearchResult {
     private List<Event> events;
 
     /**
@@ -23,13 +23,7 @@ public class EventsResult extends BaseResult {
         return events;
     }
 
-    @Override
     public int nextPage() {
         return 0;
-    }
-
-    @Override
-    public BaseResult deserialize() {
-        return null;
     }
 }

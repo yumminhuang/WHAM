@@ -21,6 +21,10 @@ public class Event {
     private long CategoryID;
     private long SubCategoryID;
 
+    public Event() {
+
+    }
+
     public long getId() {
         return id;
     }
@@ -112,6 +116,14 @@ public class Event {
     @Override
     public String toString() {
         return "Event: " + this.name;
+    }
+
+    public String serialize() {
+        return "";
+    }
+
+    public Event deserialize(String json) {
+        return this;
     }
 
 }

@@ -19,8 +19,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import eventbrite.exception.RequestException;
+import eventbrite.model.Event;
+import eventbrite.model.Organizer;
+import eventbrite.model.Venue;
 import eventbrite.operation.BaseRequest;
 import eventbrite.operation.EventRequest;
+import eventbrite.operation.OrganizerRequest;
 import eventbrite.operation.SearchRequest;
 import eventbrite.operation.VenueRequest;
 
@@ -86,11 +90,10 @@ public class EventbriteClient {
      * @return An instance of VenueResult that describes the result of the venue_get API call.
      * @throws RequestException
      */
-    public String get(VenueRequest request) throws RequestException {
+    public Venue get(VenueRequest request) throws RequestException {
         String result = sendRequest(request);
-        return result;
-
-        //return (VenueResult) result;
+        Venue v = new Venue();
+        return v.deserialize(result);
     }
 
     /**
@@ -98,13 +101,19 @@ public class EventbriteClient {
      * events API.
      *
      * @param request The parameters for the get request.
-     * @return An instance of EventResult that describes the result of the event_get API call.
+     * @return An instance of Event that describes the result of the GET event API call.
      * @throws RequestException
      */
-    public String get(EventRequest request) throws RequestException {
+    public Event get(EventRequest request) throws RequestException {
         String result = sendRequest(request);
+        Event e = new Event();
+        return e.deserialize(result);
+    }
 
-        return result;
+    public Organizer get(OrganizerRequest request) throws RequestException {
+        String result = sendRequest(request);
+        Organizer o = new Organizer();
+        return o.deserialize(result);
     }
 
     /**

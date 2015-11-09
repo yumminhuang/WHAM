@@ -12,6 +12,10 @@ public class Organizer {
     private String description;
     private String url;
 
+    public Organizer() {
+
+    }
+
     public String getName() {
         return name;
     }
@@ -34,5 +38,13 @@ public class Organizer {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String serialize() {
+        return "";
+    }
+
+    public Organizer deserialize(String json) {
+        return this;
     }
 }
