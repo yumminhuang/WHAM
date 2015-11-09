@@ -18,21 +18,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import eventbrite.exception.RequestException;
-import eventbrite.model.Event;
 import eventbrite.operation.BaseRequest;
-import eventbrite.operation.BaseResult;
 import eventbrite.operation.EventRequest;
-import eventbrite.operation.EventResult;
-import eventbrite.operation.EventsResult;
 import eventbrite.operation.SearchRequest;
 import eventbrite.operation.VenueRequest;
-import eventbrite.serialization.BaseResultDeserializer;
-import eventbrite.serialization.EventSearchResultDeserializer;
-import eventbrite.serialization.LowercaseEnumTypeAdapterFactory;
 
 /**
  * @Author: yummin
@@ -50,11 +40,6 @@ public class EventbriteClient {
      * Holds the HttpClient to use with this instance.
      */
     private final HttpClient httpClient;
-
-    /**
-     * Holds the Gson JSON serializer/deserializer to use with this instance.
-     */
-    private final Gson gson;
 
     /**
      * Initializes a new instance of EventbriteClient using the given Credentials.
@@ -76,11 +61,6 @@ public class EventbriteClient {
 
         this.credentials = credentials;
         this.httpClient = httpClient;
-        this.gson = new GsonBuilder()
-                .registerTypeAdapter(BaseResult.class, new BaseResultDeserializer())
-                .registerTypeAdapter(Event.class, new EventSearchResultDeserializer())
-                .registerTypeAdapterFactory(new LowercaseEnumTypeAdapterFactory())
-                .create();
     }
 
     public void shutdown() {
@@ -176,12 +156,9 @@ public class EventbriteClient {
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
-            
-            return sb.toString();
 
-//            BaseResult result = gson.fromJson(reader, BaseResult.class);
-//
-//            return result;
+            // Return String of JSON response
+            return sb.toString();
 
         } catch (URISyntaxException ex) {
             log.error("URISyntaxException:", ex);

@@ -21,4 +21,14 @@ public class EventResult extends BaseResult {
         return event;
     }
 
+    @Override
+    public int nextPage() {
+        return 0;
+    }
+
+    @Override
+    public BaseResult deserialize() {
+        return null;
+    }
+
 }

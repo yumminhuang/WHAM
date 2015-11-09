@@ -1,7 +1,5 @@
 package eventbrite.operation;
 
-import eventbrite.model.Pagination;
-
 /**
  * Represents the base class for Eventbrite API results.
  *
@@ -10,5 +8,11 @@ import eventbrite.model.Pagination;
  */
 public abstract class BaseResult {
 
-    private Pagination pagination;
+    /**
+     *
+     * @return next page number. Return 0 if there is no next page.
+     */
+    public abstract int nextPage();
+
+    public abstract BaseResult deserialize();
 }

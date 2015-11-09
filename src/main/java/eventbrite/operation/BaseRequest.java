@@ -1,15 +1,14 @@
 package eventbrite.operation;
 
-import eventbrite.Credentials;
-import eventbrite.exception.RequestException;
-import eventbrite.serialization.ConversionHelper;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
+import eventbrite.exception.RequestException;
 
 /**
  * Represents the base class for Eventbrite API requests.
@@ -99,16 +98,5 @@ public abstract class BaseRequest {
         }
 
         return builder.build();
-    }
-
-    /**
-     * Returns the values of the given input array as a string with the values comma-separated.
-     *
-     * @param values The values to convert.
-     * @param <T>    The type of values to convert.
-     * @return A String that represents the comma-separated list of input values.
-     */
-    protected <T> String convertToCommaSeparatedList(T[] values) {
-        return ConversionHelper.convertValuesToCommaSeparatedList(values);
     }
 }

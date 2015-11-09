@@ -1,8 +1,8 @@
 package eventbrite.operation;
 
-import eventbrite.model.Event;
-
 import java.util.List;
+
+import eventbrite.model.Event;
 
 /**
  * Represents the result from a request to the events/search API.
@@ -21,5 +21,15 @@ public class EventsResult extends BaseResult {
      */
     public List<Event> getEvents() {
         return events;
+    }
+
+    @Override
+    public int nextPage() {
+        return 0;
+    }
+
+    @Override
+    public BaseResult deserialize() {
+        return null;
     }
 }
