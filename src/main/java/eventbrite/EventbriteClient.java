@@ -24,6 +24,7 @@ import eventbrite.model.Organizer;
 import eventbrite.model.Venue;
 import eventbrite.operation.BaseRequest;
 import eventbrite.operation.EventRequest;
+import eventbrite.operation.EventsSearchResult;
 import eventbrite.operation.OrganizerRequest;
 import eventbrite.operation.SearchRequest;
 import eventbrite.operation.VenueRequest;
@@ -78,8 +79,10 @@ public class EventbriteClient {
      * @return An instance of EventsResult that describes the result of the events/search API call.
      * @throws RequestException
      */
-    public String search(SearchRequest request) throws RequestException {
-        return sendRequest(request);
+    public EventsSearchResult search(SearchRequest request) throws RequestException {
+        String result = sendRequest(request);
+        EventsSearchResult events = new EventsSearchResult();
+        return events.deserialize(result);
     }
 
     /**

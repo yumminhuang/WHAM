@@ -1,6 +1,9 @@
 package eventbrite.model;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONObject;
 
 /**
  * @see: https://www.eventbrite.com/developer/v3/formats/event/
@@ -11,15 +14,16 @@ public class Event {
     private long id;
     private String name;
     private String url;
+    private String description;
     private DateTime startTime;
     private DateTime endTime;
     private int capacity;
-    private EventStatus status;
+    private String status;
 
     private long venueID;
     private long organizerID;
-    private long CategoryID;
-    private long SubCategoryID;
+    private long categoryID;
+    private long subCategoryID;
 
     public Event() {
 
@@ -73,11 +77,11 @@ public class Event {
         this.capacity = capacity;
     }
 
-    public EventStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(EventStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -98,19 +102,27 @@ public class Event {
     }
 
     public long getCategoryID() {
-        return CategoryID;
+        return categoryID;
     }
 
     public void setCategoryID(long categoryID) {
-        CategoryID = categoryID;
+        categoryID = categoryID;
     }
 
     public long getSubCategoryID() {
-        return SubCategoryID;
+        return subCategoryID;
     }
 
     public void setSubCategoryID(long subCategoryID) {
-        SubCategoryID = subCategoryID;
+        subCategoryID = subCategoryID;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
@@ -119,10 +131,37 @@ public class Event {
     }
 
     public String serialize() {
-        return "";
+        JSONObject e = new JSONObject();
+        e.put("id", id);
+        e.put("name", name);
+        e.put("url", url);
+        e.put("description", description);
+        e.put("start", startTime.toString());
+        e.put("end", endTime.toString());
+        e.put("capacity", capacity);
+        e.put("status", status);
+        e.put("venueID", venueID);
+        e.put("organizerID", organizerID);
+        e.put("categoryID", categoryID);
+        e.put("subCategoryID", subCategoryID);
+        return e.toString();
     }
 
     public Event deserialize(String json) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+        JSONObject e = new JSONObject(json);
+        this.id = e.getLong("id");
+        this.url = e.getString("url");
+        this.capacity = e.getInt("capacity");
+        this.organizerID = e.getLong("organizer_id");
+        this.venueID = e.getLong("venue_id");
+        this.categoryID = e.getLong("category_id");
+        this.subCategoryID = e.getLong("resource_uri");
+        this.name = e.getJSONObject("name").getString("text");
+        this.setDescription(e.getJSONObject("description").getString("text"));
+        this.startTime = formatter.parseDateTime(e.getJSONObject("start").getString("local"));
+        this.endTime = formatter.parseDateTime(e.getJSONObject("end").getString("local"));
+        this.status = e.getString("status");
         return this;
     }
 

@@ -1,5 +1,7 @@
 package eventbrite.model;
 
+import org.json.JSONObject;
+
 /**
  * @see: https://www.eventbrite.com/developer/v3/formats/organizer/
  * @Author: yummin
@@ -41,10 +43,21 @@ public class Organizer {
     }
 
     public String serialize() {
-        return "";
+        JSONObject org = new JSONObject();
+        org.put("id", id);
+        org.put("name", name);
+        org.put("url", url);
+        org.put("description", description);
+        return org.toString();
     }
 
     public Organizer deserialize(String json) {
+        JSONObject org = new JSONObject();
+        JSONObject description = org.getJSONObject("description");
+        this.id = org.getLong("id");
+        this.name = org.getString("name");
+        this.url = org.getString("url");
+        this.description = description.getString("text");
         return this;
     }
 }

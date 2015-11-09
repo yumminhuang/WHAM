@@ -120,7 +120,7 @@ public class Venue {
     public Venue deserialize(String json) {
         JSONObject venue = new JSONObject(json);
         JSONObject address = venue.getJSONObject("address");
-        this.id = Long.parseLong(venue.getString("id"));
+        this.id = venue.getLong("id");
         this.name = venue.getString("name");
         this.latitude = venue.getString("latitude");
         this.longitude = venue.getString("longitude");

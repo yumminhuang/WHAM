@@ -7,8 +7,7 @@ import eventbrite.model.Event;
 /**
  * Represents the result from a request to the events/search API.
  *
- * @Author: yummin
- * Date: 15/11/6
+ * @Author: yummin Date: 15/11/6
  */
 
 public class EventsSearchResult {
@@ -23,6 +22,18 @@ public class EventsSearchResult {
         return events;
     }
 
+    public EventsSearchResult deserialize(String json) {
+        return this;
+    }
+
+    public String serialize() {
+        return "";
+    }
+
+    /**
+     *
+     * @return
+     */
     public int nextPage() {
         return 0;
     }

@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 
 import org.junit.Test;
 
+import eventbrite.model.Organizer;
 import eventbrite.model.Venue;
 
 public class ParseJSONTest {
@@ -32,6 +33,13 @@ public class ParseJSONTest {
         v.deserialize(json);
         assertEquals(v.serialize(),
                 "{\"id\":11768139,\"name\":\"Sinclair-Music Hall\",\"address1\":\"52 Church Street\",\"longitude\":\"-71.12059299999999\",\"latitude\":\"42.373975\",\"city\":\"Cambridge\"}");
+    }
+
+    @Test
+    public void testParseOrganizer() {
+        String json = loadJSONFile("Organizer.json");
+        Organizer o = new Organizer();
+        o.deserialize(json);
     }
 
 }
