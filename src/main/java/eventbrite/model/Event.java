@@ -106,7 +106,7 @@ public class Event {
     }
 
     public void setCategoryID(long categoryID) {
-        categoryID = categoryID;
+        this.categoryID = categoryID;
     }
 
     public long getSubCategoryID() {
@@ -114,7 +114,7 @@ public class Event {
     }
 
     public void setSubCategoryID(long subCategoryID) {
-        subCategoryID = subCategoryID;
+        this.subCategoryID = subCategoryID;
     }
 
     public String getDescription() {
@@ -147,22 +147,28 @@ public class Event {
         return e.toString();
     }
 
-    public Event deserialize(String json) {
+    public Event deserialize(JSONObject e) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
-        JSONObject e = new JSONObject(json);
         this.id = e.getLong("id");
         this.url = e.getString("url");
         this.capacity = e.getInt("capacity");
         this.organizerID = e.getLong("organizer_id");
         this.venueID = e.getLong("venue_id");
         this.categoryID = e.getLong("category_id");
-        this.subCategoryID = e.getLong("resource_uri");
+        if (!e.isNull("subcategory_id")) {
+            this.subCategoryID = e.getLong("subcategory_id");
+        }
         this.name = e.getJSONObject("name").getString("text");
         this.setDescription(e.getJSONObject("description").getString("text"));
         this.startTime = formatter.parseDateTime(e.getJSONObject("start").getString("local"));
         this.endTime = formatter.parseDateTime(e.getJSONObject("end").getString("local"));
         this.status = e.getString("status");
         return this;
+    }
+
+    public Event deserialize(String json) {
+        JSONObject e = new JSONObject(json);
+        return this.deserialize(e);
     }
 
 }

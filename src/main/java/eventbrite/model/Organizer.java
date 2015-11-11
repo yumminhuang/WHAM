@@ -52,12 +52,11 @@ public class Organizer {
     }
 
     public Organizer deserialize(String json) {
-        JSONObject org = new JSONObject();
-        JSONObject description = org.getJSONObject("description");
+        JSONObject org = new JSONObject(json);
         this.id = org.getLong("id");
         this.name = org.getString("name");
         this.url = org.getString("url");
-        this.description = description.getString("text");
+        this.description = org.getJSONObject("description").getString("text");
         return this;
     }
 }

@@ -124,7 +124,9 @@ public class Venue {
         this.name = venue.getString("name");
         this.latitude = venue.getString("latitude");
         this.longitude = venue.getString("longitude");
-        this.address1 = address.getString("address_1");
+        if (!address.isNull("address_1")) {
+            this.address1 = address.getString("address_1");
+        }
         this.city = address.getString("city");
         return this;
     }

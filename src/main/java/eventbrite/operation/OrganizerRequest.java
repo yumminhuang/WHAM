@@ -14,7 +14,7 @@ public class OrganizerRequest extends BaseRequest {
 
     @Override
     protected String getAPIName() {
-        return "organizers/" + id;
+        return "organizers/" + id + "/";
     }
 
     @Override
