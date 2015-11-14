@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -77,13 +76,13 @@ public class EventbriteClient {
      * Searches for events using the Eventbrite events/search API.
      *
      * @param request The parameters for the search request.
-     * @return A List of Event that describes the result of the events/search API call.
+     * @return EventsSearchResult that describes the result of the events/search API call.
      * @throws RequestException
      */
-    public List<Event> search(SearchRequest request) throws RequestException {
+    public EventsSearchResult search(SearchRequest request) throws RequestException {
         String result = sendRequest(request);
         EventsSearchResult events = new EventsSearchResult(result);
-        return events.getEvents();
+        return events;
     }
 
     /**

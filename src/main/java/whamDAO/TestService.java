@@ -9,7 +9,7 @@ import javax.ws.rs.PathParam;
 import eventbrite.Credentials;
 import eventbrite.EventbriteClient;
 import eventbrite.exception.RequestException;
-import eventbrite.model.Event;
+import eventbrite.operation.EventsSearchResult;
 import eventbrite.operation.SearchRequest;
 import eventbrite.operation.VenueRequest;
 
@@ -27,8 +27,7 @@ public class TestService {
             @PathParam("city") String city,
             @PathParam("sort") String sort
             ) throws URISyntaxException, RequestException {
-        EventbriteClient client = new EventbriteClient(new Credentials(
-                "MDX3DX5IAD7OWOPHLIXU"));
+        EventbriteClient client = new EventbriteClient(new Credentials());
 
         SearchRequest request = new SearchRequest();
 
@@ -36,10 +35,8 @@ public class TestService {
         request.setVenue_city(city);
         request.setSortBy(sort);
 
-        StringBuilder sb = new StringBuilder();
-        for (Event e : client.search(request))
-            sb.append(e.toString()).append("\n");
-        return sb.toString();
+        EventsSearchResult events = client.search(request);
+        return events.serialize();
     }
 
     @GET
@@ -53,12 +50,9 @@ public class TestService {
     public String getVenusDetails(@PathParam("id") String id)
             throws RequestException {
 
-        EventbriteClient client = new EventbriteClient(new Credentials(
-                "MDX3DX5IAD7OWOPHLIXU"));
+        EventbriteClient client = new EventbriteClient(new Credentials());
         VenueRequest request = new VenueRequest();
         request.setId(Long.parseLong(id));
-
-        //	return id;
         return client.get(request).serialize();
 
     }

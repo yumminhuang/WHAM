@@ -32,6 +32,17 @@ public class EventsSearchResult {
         return events;
     }
 
+    public String serialize() {
+        JSONArray ret = new JSONArray();
+        JSONObject result = new JSONObject(json);
+        JSONArray es = result.getJSONArray("events");
+        for (int i = 0, size = es.length(); i < size; i++) {
+            JSONObject e = es.getJSONObject(i);
+            ret.put(e);
+        }
+        return ret.toString();
+    }
+
     /**
      *
      * @return next page number if the result has more page; Otherwise, return
