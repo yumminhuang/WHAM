@@ -33,15 +33,17 @@ public class EventsSearchResult {
     }
 
     public String serialize() {
-        JSONArray ret = new JSONArray();
+        JSONArray eventList = new JSONArray();
         JSONObject result = new JSONObject(json);
         JSONArray es = result.getJSONArray("events");
         for (int i = 0, size = es.length(); i < size; i++) {
             JSONObject e = es.getJSONObject(i);
             Event tmp = new Event();
             tmp.deserialize(e);
-            ret.put(tmp.extractAttributes());
+            eventList.put(tmp.extractAttributes());
         }
+        JSONObject ret = new JSONObject();
+        ret.putOnce("records", eventList);
         return ret.toString();
     }
 
