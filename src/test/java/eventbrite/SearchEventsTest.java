@@ -26,7 +26,9 @@ public final class SearchEventsTest extends TestBase {
     @Test
     public void testEventSearch() throws RequestException {
         SearchRequest request = new SearchRequest();
-        request.setKeywords(new String[] { "Rock", "Music" });
+        request.setVenue_city("Boston");
+        request.setCategories("Music");
+        request.setKeywords(new String[] { "Rock"});
         assertNotNull(client.search(request));
     }
 }

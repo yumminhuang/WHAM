@@ -1,6 +1,7 @@
 package eventbrite;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -11,6 +12,7 @@ import org.junit.Test;
 
 import eventbrite.model.Organizer;
 import eventbrite.model.Venue;
+import eventbrite.operation.EventsSearchResult;
 
 public class ParseJSONTest {
 
@@ -31,8 +33,7 @@ public class ParseJSONTest {
         String json = loadJSONFile("Venue.json");
         Venue v = new Venue();
         v.deserialize(json);
-        assertEquals(v.serialize(),
-                "{\"id\":11768139,\"name\":\"Sinclair-Music Hall\",\"address1\":\"52 Church Street\",\"longitude\":\"-71.12059299999999\",\"latitude\":\"42.373975\",\"city\":\"Cambridge\"}");
+        assertNotNull(v.serialize());
     }
 
     @Test
@@ -40,6 +41,15 @@ public class ParseJSONTest {
         String json = loadJSONFile("Organizer.json");
         Organizer o = new Organizer();
         o.deserialize(json);
+        assertNotNull(o.serialize());
+    }
+
+    @Test
+    public void testParseEventsSearch() {
+        String json = loadJSONFile("SearchResult.json");
+        EventsSearchResult result = new EventsSearchResult(json);
+        assertEquals(result.getEvents().size(), 5);
+        assertEquals(result.nextPage(), -1);
     }
 
 }

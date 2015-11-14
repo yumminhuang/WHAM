@@ -32,7 +32,7 @@ public class RequestTest extends TestBase {
     public void testGetOrganizerRequest() throws URISyntaxException, RequestException {
         OrganizerRequest request = new OrganizerRequest();
         request.setId(4706628377l);
-        assertEquals("https://www.eventbriteapi.com/v3/organizers/4706628377", request.getUri().toString());
+        assertEquals("https://www.eventbriteapi.com/v3/organizers/4706628377/", request.getUri().toString());
     }
 
     @Test
