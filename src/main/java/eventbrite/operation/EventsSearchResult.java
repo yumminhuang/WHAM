@@ -38,7 +38,9 @@ public class EventsSearchResult {
         JSONArray es = result.getJSONArray("events");
         for (int i = 0, size = es.length(); i < size; i++) {
             JSONObject e = es.getJSONObject(i);
-            ret.put(e);
+            Event tmp = new Event();
+            tmp.deserialize(e);
+            ret.put(tmp.extractAttributes());
         }
         return ret.toString();
     }

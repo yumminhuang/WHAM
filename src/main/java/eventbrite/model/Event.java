@@ -131,6 +131,10 @@ public class Event {
     }
 
     public String serialize() {
+        return this.extractAttributes().toString();
+    }
+
+    public JSONObject extractAttributes() {
         JSONObject e = new JSONObject();
         e.put("id", id);
         e.put("name", name);
@@ -144,7 +148,7 @@ public class Event {
         e.put("organizerID", organizerID);
         e.put("categoryID", categoryID);
         e.put("subCategoryID", subCategoryID);
-        return e.toString();
+        return e;
     }
 
     public Event deserialize(JSONObject e) {
