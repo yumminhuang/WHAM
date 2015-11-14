@@ -28,6 +28,7 @@ public class SearchRequest extends BaseRequest {
     private String venue_country;
     private String categories;
     private boolean popular;
+    private int page;
 
     @Override
     protected String getAPIName() {
@@ -51,6 +52,9 @@ public class SearchRequest extends BaseRequest {
         addParameter("categories", Category.findIdByCategory(categories).getId(), params);
         addParameter("sort_by", sortBy, params);
         addParameter("popular", popular, params);
+        if (page > 1) {
+            addParameter("page", page, params);
+        }
 
         return params;
     }
@@ -111,5 +115,9 @@ public class SearchRequest extends BaseRequest {
 
     public void setPopular(boolean popular) {
         this.popular = popular;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
     }
 }

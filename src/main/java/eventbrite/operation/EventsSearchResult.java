@@ -47,8 +47,7 @@ public class EventsSearchResult {
 
     /**
      *
-     * @return next page number if the result has more page; Otherwise, return
-     *         -1.
+     * @return next page number if the result has more page; Otherwise, return -1.
      */
     public int nextPage() {
         JSONObject result = new JSONObject(json);

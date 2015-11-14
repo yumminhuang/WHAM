@@ -9,8 +9,8 @@
     <servlet-name>Jersey REST Service</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
     <init-param>
-      <param-name>com.sun.jersey.config.property.packages</param-name>
-      <param-value>whamDAO</param-value>
+      <param-name>jersey.config.server.provider.packages</param-name>
+      <param-value>main.java.wham</param-value>
     </init-param>
 	<init-param>
 		<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>

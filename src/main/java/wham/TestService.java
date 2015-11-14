@@ -1,4 +1,4 @@
-package whamDAO;
+package wham;
 
 import java.net.URISyntaxException;
 
