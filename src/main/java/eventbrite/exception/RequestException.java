@@ -7,6 +7,8 @@ package eventbrite.exception;
  * Date: 15/11/6
  */
 public class RequestException extends Exception {
+    private static final long serialVersionUID = 1L;
+
     public RequestException() {
     }
 

@@ -18,21 +18,16 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import eventbrite.exception.RequestException;
 import eventbrite.model.Event;
+import eventbrite.model.Organizer;
+import eventbrite.model.Venue;
 import eventbrite.operation.BaseRequest;
-import eventbrite.operation.BaseResult;
 import eventbrite.operation.EventRequest;
-import eventbrite.operation.EventResult;
-import eventbrite.operation.EventsResult;
+import eventbrite.operation.EventsSearchResult;
+import eventbrite.operation.OrganizerRequest;
 import eventbrite.operation.SearchRequest;
 import eventbrite.operation.VenueRequest;
-import eventbrite.serialization.BaseResultDeserializer;
-import eventbrite.serialization.EventSearchResultDeserializer;
-import eventbrite.serialization.LowercaseEnumTypeAdapterFactory;
 
 /**
  * @Author: yummin
@@ -50,11 +45,6 @@ public class EventbriteClient {
      * Holds the HttpClient to use with this instance.
      */
     private final HttpClient httpClient;
-
-    /**
-     * Holds the Gson JSON serializer/deserializer to use with this instance.
-     */
-    private final Gson gson;
 
     /**
      * Initializes a new instance of EventbriteClient using the given Credentials.
@@ -76,11 +66,6 @@ public class EventbriteClient {
 
         this.credentials = credentials;
         this.httpClient = httpClient;
-        this.gson = new GsonBuilder()
-                .registerTypeAdapter(BaseResult.class, new BaseResultDeserializer())
-                .registerTypeAdapter(Event.class, new EventSearchResultDeserializer())
-                .registerTypeAdapterFactory(new LowercaseEnumTypeAdapterFactory())
-                .create();
     }
 
     public void shutdown() {
@@ -91,11 +76,13 @@ public class EventbriteClient {
      * Searches for events using the Eventbrite events/search API.
      *
      * @param request The parameters for the search request.
-     * @return An instance of EventsResult that describes the result of the events/search API call.
+     * @return EventsSearchResult that describes the result of the events/search API call.
      * @throws RequestException
      */
-    public String search(SearchRequest request) throws RequestException {
-        return sendRequest(request);
+    public EventsSearchResult search(SearchRequest request) throws RequestException {
+        String result = sendRequest(request);
+        EventsSearchResult events = new EventsSearchResult(result);
+        return events;
     }
 
     /**
@@ -106,11 +93,10 @@ public class EventbriteClient {
      * @return An instance of VenueResult that describes the result of the venue_get API call.
      * @throws RequestException
      */
-    public String get(VenueRequest request) throws RequestException {
+    public Venue get(VenueRequest request) throws RequestException {
         String result = sendRequest(request);
-        return result;
-
-        //return (VenueResult) result;
+        Venue v = new Venue();
+        return v.deserialize(result);
     }
 
     /**
@@ -118,13 +104,19 @@ public class EventbriteClient {
      * events API.
      *
      * @param request The parameters for the get request.
-     * @return An instance of EventResult that describes the result of the event_get API call.
+     * @return An instance of Event that describes the result of the GET event API call.
      * @throws RequestException
      */
-    public String get(EventRequest request) throws RequestException {
+    public Event get(EventRequest request) throws RequestException {
         String result = sendRequest(request);
+        Event e = new Event();
+        return e.deserialize(result);
+    }
 
-        return result;
+    public Organizer get(OrganizerRequest request) throws RequestException {
+        String result = sendRequest(request);
+        Organizer o = new Organizer();
+        return o.deserialize(result);
     }
 
     /**
@@ -176,12 +168,9 @@ public class EventbriteClient {
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
-            
-            return sb.toString();
 
-//            BaseResult result = gson.fromJson(reader, BaseResult.class);
-//
-//            return result;
+            // Return String of JSON response
+            return sb.toString();
 
         } catch (URISyntaxException ex) {
             log.error("URISyntaxException:", ex);

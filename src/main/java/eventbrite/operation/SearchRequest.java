@@ -1,11 +1,13 @@
 package eventbrite.operation;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
+import eventbrite.model.Category;
 
 /**
  * Represents a request to the GET /events/search/ API.
@@ -24,8 +26,10 @@ public class SearchRequest extends BaseRequest {
     private String location_longitude;
     private String venue_city;
     private String venue_country;
-    private String[] categories;
-    private String[] subcategories;
+    private String categories;
+    private boolean popular;
+    private int page;
+    private String expand;
 
     @Override
     protected String getAPIName() {
@@ -39,16 +43,22 @@ public class SearchRequest extends BaseRequest {
         if (null != keywords && 0 < keywords.length) {
             params.add(new BasicNameValuePair("q", getKeywordsParameter()));
         }
-        if (null != categories && 0 < categories.length) {
-            params.add(new BasicNameValuePair("categories", getCategoriesParameter()));
-        }
+
         addParameter("location.address", location_address, params);
         addParameter("location.within", location_within, params);
         addParameter("location.latitude", location_latitude, params);
         addParameter("location.longitude", location_longitude, params);
-        addParameter("sort_by", sortBy, params);
         addParameter("venue.city", venue_city, params);
         addParameter("venue.country", venue_country, params);
+        if (categories != null)
+            addParameter("categories", Category.findIdByCategory(categories).getId(), params);
+        addParameter("sort_by", sortBy, params);
+        if (popular)
+            addParameter("popular", popular, params);
+        if (page > 1)
+            addParameter("page", page, params);
+        addParameter("expand", expand, params);
+
 
         return params;
     }
@@ -62,19 +72,6 @@ public class SearchRequest extends BaseRequest {
             }
 
             sb.append(keyword);
-        }
-
-        return sb.toString();
-    }
-
-    private String getCategoriesParameter() {
-        StringBuilder sb = new StringBuilder();
-
-        for (String cat : categories) {
-            if (0 < sb.length()) {
-                sb.append(",");
-            }
-            sb.append(cat);
         }
 
         return sb.toString();
@@ -116,11 +113,19 @@ public class SearchRequest extends BaseRequest {
         this.venue_country = venue_country;
     }
 
-    public void setCategories(String[] categories) {
+    public void setCategories(String categories) {
         this.categories = categories;
     }
 
-    public void setSubcategories(String[] subcategories) {
-        this.subcategories = subcategories;
+    public void setPopular(boolean popular) {
+        this.popular = popular;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public void setExpand(String expand) {
+        this.expand = expand;
     }
 }
