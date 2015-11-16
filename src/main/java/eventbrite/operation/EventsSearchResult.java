@@ -1,6 +1,7 @@
 package eventbrite.operation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,7 +21,12 @@ public class EventsSearchResult {
         this.json = json;
     }
 
-    public ArrayList<Event> getEvents() {
+    /**
+     * Get List<Event> from EventsSearchResult
+     *
+     * @return
+     */
+    public List<Event> getEvents() {
         JSONObject result = new JSONObject(json);
         JSONArray es = result.getJSONArray("events");
         ArrayList<Event> events = new ArrayList<Event>();
@@ -32,16 +38,26 @@ public class EventsSearchResult {
         return events;
     }
 
+    /**
+     * Searialize events of search result
+     *
+     * @return
+     */
     public String serialize() {
+        // array to store events of search result
         JSONArray eventList = new JSONArray();
+        // search result
         JSONObject result = new JSONObject(json);
         JSONArray es = result.getJSONArray("events");
+        // Loop events
         for (int i = 0, size = es.length(); i < size; i++) {
             JSONObject e = es.getJSONObject(i);
             Event tmp = new Event();
             tmp.deserialize(e);
+            // Only store attributes we want
             eventList.put(tmp.extractAttributes());
         }
+        // Wrap json array with key 'records'
         JSONObject ret = new JSONObject();
         ret.putOnce("records", eventList);
         return ret.toString();

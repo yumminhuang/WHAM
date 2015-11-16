@@ -20,6 +20,12 @@ public class WebService {
 
     @GET
     @Path("/venue/{id}")
+    /**
+     * Get Venue details by id
+     * @param id Venue id
+     * @return JSON describe venue
+     * @throws RequestException
+     */
     public String getVenusDetails(@PathParam("id") String id) throws RequestException {
         EventbriteClient client = new EventbriteClient(new Credentials());
         VenueRequest request = new VenueRequest();
@@ -29,9 +35,17 @@ public class WebService {
 
     @GET
     @Path("/search")
+    /**
+     * Seach events
+     * @param headers header contains parameters
+     * @return JSON describe event list
+     * @throws URISyntaxException
+     * @throws RequestException
+     */
     public String searchEvents(@Context HttpHeaders headers) throws URISyntaxException, RequestException {
         EventbriteClient client = new EventbriteClient(new Credentials());
         SearchRequest request = new SearchRequest();
+        // Iterate header set search request
         for (String key : headers.getRequestHeaders().keySet()) {
             String value = headers.getRequestHeader(key).get(0);
             switch (key) {
