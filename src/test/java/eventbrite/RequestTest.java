@@ -7,12 +7,18 @@ import java.net.URISyntaxException;
 import org.junit.Test;
 
 import eventbrite.exception.RequestException;
+import eventbrite.model.Category;
 import eventbrite.operation.EventRequest;
 import eventbrite.operation.OrganizerRequest;
 import eventbrite.operation.SearchRequest;
 import eventbrite.operation.VenueRequest;
 
 public class RequestTest extends TestBase {
+
+    @Test
+    public void testCategory() {
+        assertEquals(Category.findIdByCategory("Community").getId(), 113);
+    }
 
     @Test
     public void testGetEventRequest() throws URISyntaxException, RequestException {
@@ -40,10 +46,8 @@ public class RequestTest extends TestBase {
         SearchRequest request = new SearchRequest();
         request.setKeywords(new String[] { "Rock", "Music" });
         request.setVenue_city("Boston");
-        request.setSortBy("date");
         request.setCategories("Music");
-        assertEquals(
-                "https://www.eventbriteapi.com/v3/events/search?q=Rock%2BMusic&venue.city=Boston&categories=103&sort_by=date",
+        assertEquals("https://www.eventbriteapi.com/v3/events/search?q=Rock%2BMusic&venue.city=Boston&categories=103",
                 request.getUri().toString());
     }
 

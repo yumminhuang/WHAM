@@ -56,7 +56,8 @@ public class Organizer {
         this.id = org.getLong("id");
         this.name = org.getString("name");
         this.url = org.getString("url");
-        this.description = org.getJSONObject("description").getString("text");
+        if (!org.isNull("description"))
+            this.description = org.getJSONObject("description").getString("text");
         return this;
     }
 }
