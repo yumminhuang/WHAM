@@ -20,6 +20,7 @@ public class Event {
     private DateTime endTime;
     private int capacity;
     private String status;
+    private String logo_url;
 
     // Expansion attributes
     private long venueID;
@@ -133,6 +134,10 @@ public class Event {
         this.description = description;
     }
 
+    public String getLogo_url() {
+        return logo_url;
+    }
+
     @Override
     public String toString() {
         return "Event: " + this.name;
@@ -156,6 +161,7 @@ public class Event {
         e.put("organizerID", organizerID);
         e.put("categoryID", categoryID);
         e.put("subCategoryID", subCategoryID);
+        e.put("logoURL", logo_url);
         e.put("longitude", longitude);
         e.put("latitude", latitude);
         return e;
@@ -181,6 +187,8 @@ public class Event {
         }
         if (!e.getJSONObject("description").isNull("text"))
             this.setDescription(e.getJSONObject("description").getString("text"));
+        if (e.has("logo") && !e.isNull("logo"))
+            this.logo_url = e.getJSONObject("logo").getString("url");
         if (e.has("venue") && !e.isNull("venue")) {
             this.longitude = e.getJSONObject("venue").getJSONObject("address").getDouble("longitude");
             this.latitude = e.getJSONObject("venue").getJSONObject("address").getDouble("latitude");
