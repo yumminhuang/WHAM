@@ -1,9 +1,9 @@
 package eventbrite.operation;
 
-import org.apache.http.NameValuePair;
-
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import org.apache.http.NameValuePair;
 
 /**
  * @Author: yummin
@@ -20,7 +20,7 @@ public class VenueRequest extends BaseRequest  {
 
     @Override
     protected List<NameValuePair> getQueryParameters() {
-        return new ArrayList<NameValuePair>();
+        return Collections.<NameValuePair> emptyList();
     }
 
     public void setId(long id) {

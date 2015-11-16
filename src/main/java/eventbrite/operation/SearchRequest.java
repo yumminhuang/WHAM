@@ -29,6 +29,7 @@ public class SearchRequest extends BaseRequest {
     private String categories;
     private boolean popular;
     private int page;
+    private String expand;
 
     @Override
     protected String getAPIName() {
@@ -49,12 +50,15 @@ public class SearchRequest extends BaseRequest {
         addParameter("location.longitude", location_longitude, params);
         addParameter("venue.city", venue_city, params);
         addParameter("venue.country", venue_country, params);
-        addParameter("categories", Category.findIdByCategory(categories).getId(), params);
+        if (categories != null)
+            addParameter("categories", Category.findIdByCategory(categories).getId(), params);
         addParameter("sort_by", sortBy, params);
-        addParameter("popular", popular, params);
-        if (page > 1) {
+        if (popular)
+            addParameter("popular", popular, params);
+        if (page > 1)
             addParameter("page", page, params);
-        }
+        addParameter("expand", expand, params);
+
 
         return params;
     }
@@ -119,5 +123,9 @@ public class SearchRequest extends BaseRequest {
 
     public void setPage(int page) {
         this.page = page;
+    }
+
+    public void setExpand(String expand) {
+        this.expand = expand;
     }
 }

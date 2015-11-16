@@ -14,16 +14,24 @@ public class Event {
     private long id;
     private String name;
     private String url;
+    // Note: description is optional
     private String description;
     private DateTime startTime;
     private DateTime endTime;
     private int capacity;
     private String status;
 
+    // Expansion attributes
     private long venueID;
     private long organizerID;
     private long categoryID;
     private long subCategoryID;
+
+    /*
+     * These two attributes only exist when adding expend in search request
+     */
+    private Double longitude;
+    private Double latitude;
 
     public Event() {
 
@@ -148,25 +156,35 @@ public class Event {
         e.put("organizerID", organizerID);
         e.put("categoryID", categoryID);
         e.put("subCategoryID", subCategoryID);
+        e.put("longitude", longitude);
+        e.put("latitude", latitude);
         return e;
     }
 
     public Event deserialize(JSONObject e) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
         this.id = e.getLong("id");
+        this.name = e.getJSONObject("name").getString("text");
         this.url = e.getString("url");
         this.capacity = e.getInt("capacity");
         this.organizerID = e.getLong("organizer_id");
-        this.venueID = e.getLong("venue_id");
-        this.categoryID = e.getLong("category_id");
-        if (!e.isNull("subcategory_id")) {
-            this.subCategoryID = e.getLong("subcategory_id");
-        }
-        this.name = e.getJSONObject("name").getString("text");
-        this.setDescription(e.getJSONObject("description").getString("text"));
         this.startTime = formatter.parseDateTime(e.getJSONObject("start").getString("local"));
         this.endTime = formatter.parseDateTime(e.getJSONObject("end").getString("local"));
         this.status = e.getString("status");
+        // Following attributes may be null
+        if (!e.isNull("venue_id"))
+            this.venueID = e.getLong("venue_id");
+        if (!e.isNull("category_id"))
+            this.categoryID = e.getLong("category_id");
+        if (!e.isNull("subcategory_id")) {
+            this.subCategoryID = e.getLong("subcategory_id");
+        }
+        if (!e.getJSONObject("description").isNull("text"))
+            this.setDescription(e.getJSONObject("description").getString("text"));
+        if (e.has("venue") && !e.isNull("venue")) {
+            this.longitude = e.getJSONObject("venue").getJSONObject("address").getDouble("longitude");
+            this.latitude = e.getJSONObject("venue").getJSONObject("address").getDouble("latitude");
+        }
         return this;
     }
 

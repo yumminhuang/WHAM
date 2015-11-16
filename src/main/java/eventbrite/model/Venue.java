@@ -121,12 +121,12 @@ public class Venue {
         JSONObject venue = new JSONObject(json);
         JSONObject address = venue.getJSONObject("address");
         this.id = venue.getLong("id");
-        this.name = venue.getString("name");
+        if (!venue.isNull("name"))
+            this.name = venue.getString("name");
         this.latitude = venue.getString("latitude");
         this.longitude = venue.getString("longitude");
-        if (!address.isNull("address_1")) {
+        if (!address.isNull("address_1"))
             this.address1 = address.getString("address_1");
-        }
         this.city = address.getString("city");
         return this;
     }
