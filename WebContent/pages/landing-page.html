@@ -1,12 +1,14 @@
-<div class="jumbotron text-center" ng-init="getCurrentUserLocation()">
+<div class="jumbotron text-center">
     <p>Some random popular events happening near you</p>
     <div class="row">
         <div class="col-md-12">
             <div class="map-view">
-                <map zoom="2">
-                    <marker position="{{location.latitude}}, {{location.longitude}}" ng-repeat="location in locations"></marker>
-                </map>
-            </div>
+				<map zoom="4" center="Boston">
+					<marker position="{{record.latitude}}, {{record.longitude}}"
+						ng-repeat="record in records"
+						on-click="showInfoWindow(event, record)"></marker>
+				</map>
+			</div>
         </div>
     </div>
 </div>
