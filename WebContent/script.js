@@ -60,7 +60,11 @@ whamApp.controller('basicSearchController', function($scope, $rootScope, $http) 
 	
 	var req = {
 			method : 'GET',
+<<<<<<< HEAD
 			url : '/WHAM/api/search',
+=======
+			url : 'http://localhost:8080/WHAM_Project/api/search',
+>>>>>>> origin/feature/angular_portal
 			headers : {
 				keywords: $scope.query
 			}
@@ -92,7 +96,11 @@ whamApp.controller('advancedSearchController', function($http, $scope, $rootScop
 	
 	var req = {
 		method : 'GET',
+<<<<<<< HEAD
 		url : '/WHAM/api/search',
+=======
+		url : 'http://localhost:8080/WHAM_Project/api/search',
+>>>>>>> origin/feature/angular_portal
 		headers : {
 			category : category,
 			location : city
@@ -175,7 +183,11 @@ whamApp.controller('landingController', function($scope, $http) {
 	
 	var req = {
 			method : 'GET',
+<<<<<<< HEAD
 			url : '/WHAM/api/search',
+=======
+			url : 'http://localhost:8080/WHAM_Project/api/search',
+>>>>>>> origin/feature/angular_portal
 			headers : {
 				latitude : $scope.currentLatitude,
 				longitude : $scope.currentLongitude,
@@ -183,9 +195,17 @@ whamApp.controller('landingController', function($scope, $http) {
 			}
 		};
 		$http(req).then(function(response) {
+<<<<<<< HEAD
 			$scope.currentPage = 1;
 			$scope.pageSize = 10;
 			$scope.records = response.data.records;
+=======
+			console.log($scope.currentLongitude);
+			$scope.currentPage = 1;
+			$scope.pageSize = 10;
+			$scope.records = response.data.records;
+			console.log(response.data.records);
+>>>>>>> origin/feature/angular_portal
 		});
 
 		$scope.$on('mapInitialized', function(event, map) {
