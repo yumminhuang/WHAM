@@ -57,10 +57,10 @@ whamApp.controller('loginController', function($scope, $uibModal) {
 
 whamApp.controller('basicSearchController', function($scope, $rootScope, $http) {
 	$scope.query = $rootScope.userQuery;
-	
+
 	var req = {
 			method : 'GET',
-			url : 'http://localhost:8080/WHAM_Project/api/search',
+			url : 'http://localhost:8080/WHAM/api/search',
 			headers : {
 				keywords: $scope.query
 			}
@@ -89,10 +89,10 @@ whamApp.controller('advancedSearchController', function($http, $scope, $rootScop
 
 	var category = $rootScope.selectedCategory;
 	var city = $rootScope.selectedCity;
-	
+
 	var req = {
 		method : 'GET',
-		url : 'http://localhost:8080/WHAM_Project/api/search',
+		url : 'http://localhost:8080/WHAM/api/search',
 		headers : {
 			category : category,
 			location : city
@@ -165,17 +165,17 @@ whamApp.controller('landingController', function($scope, $http) {
 		value : '6',
 		text : 'Science & Tech'
 	} ];
-	
+
 	$scope.getCurrentUserLocation = function() {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			$scope.currentLatitude = position.coords.latitude;
 			$scope.currentLongitude = position.coords.longitude;
 		});
 	};
-	
+
 	var req = {
 			method : 'GET',
-			url : 'http://localhost:8080/WHAM_Project/api/search',
+			url : 'http://localhost:8080/WHAM/api/search',
 			headers : {
 				latitude : $scope.currentLatitude,
 				longitude : $scope.currentLongitude,
@@ -202,12 +202,12 @@ whamApp.controller('landingController', function($scope, $http) {
 			infowindow.setPosition(center);
 			infowindow.open($scope.objMapa);
 		};
-	
-	
+
+
 });
 
 whamApp.controller('searchController', function($scope, $location, $http, $rootScope) {
-	
+
 	$scope.search = function(query) {
 		$rootScope.userQuery = query;
 		$location.path('/search/' + query);
@@ -216,7 +216,7 @@ whamApp.controller('searchController', function($scope, $location, $http, $rootS
 	$scope.advancedSearch = function(category) {
 		$rootScope.selectedCategory = category.text;
 		$rootScope.selectedCity = $scope.city;
-		
+
 		var myEl = angular.element(document.querySelector('.dropdown'));
 		if (myEl.hasClass('open')) {
 			myEl.removeClass('open');
