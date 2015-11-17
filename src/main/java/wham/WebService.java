@@ -58,7 +58,7 @@ public class WebService {
             case "sortby":
                 request.setSortBy(value);
                 break;
-            case "venue_city":
+            case "city":
                 request.setVenue_city(value);
                 break;
             case "popular":
@@ -67,11 +67,14 @@ public class WebService {
             case "page":
                 request.setPage(Integer.parseInt(value));
                 break;
-            case "location_latitude":
+            case "latitude":
                 request.setLocation_latitude(value);
                 break;
-            case "location_longitude":
+            case "longitude":
                 request.setLocation_longitude(value);
+                break;
+            case "within":
+                request.setLocation_within(value);
                 break;
             default:
             }
