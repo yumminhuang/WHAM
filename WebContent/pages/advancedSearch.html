@@ -1,0 +1,45 @@
+<div class="container">
+    <div class="row">
+        <div class="table-responsive search-results-table">
+            <table class="table">
+                <tbody>
+                <tr ng-repeat="record in records">
+                    <td class="pull-left">{{record}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <label for="search">Search:</label>
+                        <input ng-model="q" id="search" class="form-control" placeholder="Filter text">
+                    </div>
+                    <div class="col-xs-4">
+                        <label for="search">items per page:</label>
+                        <input type="number" min="1" max="10" class="form-control" ng-model="pageSize">
+                    </div>
+                </div>
+                <br>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <ul>
+                            <li dir-paginate="record in records | filter:q | itemsPerPage: pageSize" current-page="currentPage">{{ record }}</li>
+                        </ul>
+                    </div>
+                </div>
+
+
+                <div class="text-center">
+                    <dir-pagination-controls boundary-links="true" on-page-change="pageChangeHandler(newPageNumber)" template-url="pages/dirPagination.tpl.html"></dir-pagination-controls>
+                </div>
+
+        </div>
+    </div>
+</div>

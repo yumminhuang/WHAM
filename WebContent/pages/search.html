@@ -1,0 +1,26 @@
+<div class="jumbotron text-center">
+    <p>Searched locations</p>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Search Results for {{query}}</h3>
+            <div class="table-responsive search-results-table">
+                <table class="table">
+                    <tbody>
+                    <tr ng-repeat="location in locations">
+                        <td class="pull-left">{{location.name}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="map-view">
+                <map zoom="2">
+                    <marker position="{{location.latitude}}, {{location.longitude}}" ng-repeat="location in locations"></marker>
+                </map>
+                <map center="the statue of liberty"/>
+            </div>
+        </div>
+    </div>
+</div>
