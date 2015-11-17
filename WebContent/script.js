@@ -48,11 +48,57 @@ whamApp.config(function($routeProvider) {
 	.when('/search/:query', {
 		templateUrl : 'pages/search.html',
 		controller : 'basicSearchController'
-	});
+	})
+	
+	.otherwise({
+        redirectTo: '/'
+    });
 });
 
-whamApp.controller('loginController', function($scope, $uibModal) {
+whamApp.factory('userService', function() {
+	var currentUser = null;
+	var users = [
+	             { email: "jason@bourne.com", password: "identity"},
+	             { email: "bruce@wayne.com", password: "gotham"}
+	         ];
+	
+	var login = function (email, password) {
 
+        for (var i in users) {
+            if (users[i].email === email && users[i].password === password) {
+                currentUser = users[i];
+                return users[i];
+            }
+        }
+        
+        return null;
+    }
+	
+	var getCurrentUser = function () {
+        return currentUser;
+    }
+
+    var logout = function () {
+        currentUser = null;
+    }
+
+    return {
+        login: login,
+        getCurrentUser: getCurrentUser,
+        logout: logout
+    };
+});
+
+whamApp.controller('loginController', function($scope, $rootScope, userService, $location) {
+	$scope.login = function () {
+		console.log('in login');
+        var email = $scope.email;
+        var password = $scope.password;
+        $rootScope.currentUser = userService.login(email, password);
+        if($rootScope.currentUser) {
+        	$location.path('/');
+        }
+    };
 });
 
 whamApp.controller('basicSearchController', function($scope, $rootScope, $http) {
@@ -89,7 +135,7 @@ whamApp.controller('advancedSearchController', function($http, $scope, $rootScop
 
 	var category = $rootScope.selectedCategory;
 	var city = $rootScope.selectedCity;
-	
+	$scope.records = [];
 	var req = {
 		method : 'GET',
 		url : '/WHAM/api/search',
@@ -145,7 +191,7 @@ whamApp.controller('mainController', function($scope, $uibModal) {
 	} ];
 });
 
-whamApp.controller('landingController', function($scope, $http) {
+whamApp.controller('landingController', function($scope, $http, $rootScope, $location, userService) {
 	$scope.categories = [ {
 		value : '1',
 		text : 'Music'
@@ -172,6 +218,12 @@ whamApp.controller('landingController', function($scope, $http) {
 			$scope.currentLongitude = position.coords.longitude;
 		});
 	};
+	
+	 $scope.logout = function () {
+	        $rootScope.currentUser = null;
+	        userService.logout();
+	        $location.path('/');
+	    };
 	
 	var req = {
 			method : 'GET',
