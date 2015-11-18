@@ -126,8 +126,8 @@ whamApp.controller('basicSearchController',
 						method : 'GET',
 						url : '/WHAM/api/search',
 						headers : {
-							location_latitude: $scope.currentLatitude,
-							location_longitude: $scope.currentLongitude,
+							latitude: $scope.currentLatitude,
+							longitude: $scope.currentLongitude,
 							keywords : $scope.query
 						}
 					};
@@ -164,7 +164,7 @@ whamApp.controller('advancedSearchController', function($http, $scope,
 		url : '/WHAM/api/search',
 		headers : {
 			category : category,
-			venue_city : city
+			city : city
 		}
 	};
 	$http(req).then(function(response) {
@@ -199,20 +199,6 @@ whamApp.controller('registrationController', function($scope) {
 
 whamApp.controller('mainController', function($scope, $uibModal) {
 
-	$scope.message = 'Look! I am a home page.';
-	$scope.locations = [ {
-		'name' : 'India',
-		'latitude' : '23.29',
-		'longitude' : '79.2'
-	}, {
-		'name' : 'India - 1',
-		'latitude' : '27.29',
-		'longitude' : '73.2'
-	}, {
-		'name' : 'India - 2',
-		'latitude' : '26.29',
-		'longitude' : '76.2'
-	} ];
 });
 
 whamApp.controller('landingController', function($scope, $http, $rootScope,
@@ -258,8 +244,8 @@ whamApp.controller('landingController', function($scope, $http, $rootScope,
 					method : 'GET',
 					url : '/WHAM/api/search',
 					headers : {
-						location_latitude : $scope.currentLatitude,
-						location_longitude : $scope.currentLongitude,
+						latitude : $scope.currentLatitude,
+						longitude : $scope.currentLongitude,
 						popular: 'true'
 					}
 				};
