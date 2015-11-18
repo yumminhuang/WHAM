@@ -45,7 +45,6 @@
 		</div>
 		<div class="col-md-6" style="padding-top: 25px;">
 			<div class="map-view">
-			<p>{{currentLatitude}},{{currentLongitude}}</p>
 				<map zoom="12" center="[{{currentLatitude}},{{currentLongitude}}]">
 					<marker position="{{record.latitude}}, {{record.longitude}}"
 						ng-repeat="record in records"
