@@ -31,7 +31,7 @@
 </head>
 
 <!-- define angular controller -->
-<body ng-controller="landingController" ng-init="getCurrentUserLocation()">
+<body ng-controller="landingController" ng-init="showEventsAroundUser()">
 	<nav class="navbar navbar-default">
 		<div class="container">
 			<div class="col-md-6">
@@ -76,9 +76,9 @@
 			<div class="col-md-6">
 				<ul class="nav navbar-nav navbar-right">
 					<li ng-show="!currentUser"><a href="#login"><i class="fa fa-sign-in"></i> Login</a></li>
-					<li ng-show="currentUser" ng-click="logout()"><a href="#login"><i class="fa fa-sign-in"></i> Log Out</a></li>
-					<li><a href="#home"><i class="fa fa-home"></i> Home</a></li>
-					<li><a href="#about"><i class="fa fa-shield"></i> About</a></li>
+					<li ng-show="currentUser" ng-click="logout()"><a href="#login"><i class="fa fa-sign-out"></i> Log Out</a></li>
+					<li><a href="#landing"><i class="fa fa-home"></i> Home</a></li>
+					<li ng-show="currentUser"><a href="#profile"><i class="fa fa-user"></i> My Profile</a></li>
 					<li><a href="#contact"><i class="fa fa-comment"></i>
 							Contact</a></li>
 				</ul>

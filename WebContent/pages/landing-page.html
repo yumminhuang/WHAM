@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="map-view">
-				<map zoom="4" center="Boston">
+				<map zoom="12" center="[{{currentLatitude}},{{currentLongitude}}]">
 					<marker position="{{record.latitude}}, {{record.longitude}}"
 						ng-repeat="record in records"
 						on-click="showInfoWindow(event, record)"></marker>
