@@ -50,21 +50,29 @@ whamApp.config(function($routeProvider) {
 		controller : 'basicSearchController'
 	})
 
+	.when('/profile', {
+		templateUrl : 'pages/profile.html',
+		controller : 'profileController'
+	})
+
 	.otherwise({
-		redirectTo: '/'
+		redirectTo : '/'
 	});
 });
 
 whamApp.factory('userService', function() {
 	var currentUser = null;
-	var users = [
-				 { email: "jason@bourne.com", password: "identity"},
-				 { email: "bruce@wayne.com", password: "gotham"}
-			 ];
+	var users = [ {
+		email : "jason@bourne.com",
+		password : "identity"
+	}, {
+		email : "bruce@wayne.com",
+		password : "gotham"
+	} ];
 
-	var login = function (email, password) {
+	var login = function(email, password) {
 
-		for (var i in users) {
+		for ( var i in users) {
 			if (users[i].email === email && users[i].password === password) {
 				currentUser = users[i];
 				return users[i];
@@ -74,64 +82,79 @@ whamApp.factory('userService', function() {
 		return null;
 	}
 
-	var getCurrentUser = function () {
+	var getCurrentUser = function() {
 		return currentUser;
 	}
 
-	var logout = function () {
+	var logout = function() {
 		currentUser = null;
 	}
 
 	return {
-		login: login,
-		getCurrentUser: getCurrentUser,
-		logout: logout
+		login : login,
+		getCurrentUser : getCurrentUser,
+		logout : logout
 	};
 });
 
-whamApp.controller('loginController', function($scope, $rootScope, userService, $location) {
-	$scope.login = function () {
-		console.log('in login');
+whamApp.controller('loginController', function($scope, $rootScope, userService,
+		$location) {
+	$scope.login = function() {
 		var email = $scope.email;
 		var password = $scope.password;
 		$rootScope.currentUser = userService.login(email, password);
-		if($rootScope.currentUser) {
+		if ($rootScope.currentUser) {
 			$location.path('/');
 		}
 	};
 });
 
-whamApp.controller('basicSearchController', function($scope, $rootScope, $http) {
-	$scope.query = $rootScope.userQuery;
+whamApp.controller('profileController', function() {
 
-	var req = {
-			method : 'GET',
-			url : '/WHAM/api/search',
-			headers : {
-				keywords: $scope.query
-			}
-		};
-	$http(req).then(function(response) {
-		$scope.currentPage = 1;
-		$scope.pageSize = 10;
-		$scope.records = response.data.records;
-	});
-
-	$scope.$on('mapInitialized', function(event, map) {
-		$scope.objMapa = map;
-	});
-	$scope.showInfoWindow = function(event, record) {
-		var infowindow = new google.maps.InfoWindow();
-		var center = new google.maps.LatLng(record.latitude, record.longitude);
-
-		infowindow.setContent(record.name);
-
-		infowindow.setPosition(center);
-		infowindow.open($scope.objMapa);
-	};
 });
 
-whamApp.controller('advancedSearchController', function($http, $scope, $rootScope) {
+whamApp.controller('basicSearchController',
+		function($scope, $rootScope, $http) {
+			$scope.query = $rootScope.userQuery;
+			$scope.records = [];
+
+			navigator.geolocation.getCurrentPosition(function(position) {
+				$scope.currentLatitude = position.coords.latitude;
+				$scope.currentLongitude = position.coords.longitude;
+
+				var req = {
+						method : 'GET',
+						url : '/WHAM/api/search',
+						headers : {
+							latitude: $scope.currentLatitude,
+							longitude: $scope.currentLongitude,
+							keywords : $scope.query
+						}
+					};
+					$http(req).then(function(response) {
+						$scope.currentPage = 1;
+						$scope.pageSize = 10;
+						$scope.records = response.data.records;
+					});
+			});
+
+			$scope.$on('mapInitialized', function(event, map) {
+				$scope.objMapa = map;
+			});
+			$scope.showInfoWindow = function(event, record) {
+				var infowindow = new google.maps.InfoWindow();
+				var center = new google.maps.LatLng(record.latitude,
+						record.longitude);
+
+				infowindow.setContent(record.name);
+
+				infowindow.setPosition(center);
+				infowindow.open($scope.objMapa);
+			};
+		});
+
+whamApp.controller('advancedSearchController', function($http, $scope,
+		$rootScope) {
 
 	var category = $rootScope.selectedCategory;
 	var city = $rootScope.selectedCity;
@@ -141,12 +164,13 @@ whamApp.controller('advancedSearchController', function($http, $scope, $rootScop
 		url : '/WHAM/api/search',
 		headers : {
 			category : category,
-			location : city
+			city : city
 		}
 	};
 	$http(req).then(function(response) {
 		$scope.currentPage = 1;
 		$scope.pageSize = 10;
+		$scope.currentCity = $rootScope.selectedCity;
 		$scope.records = response.data.records;
 	});
 
@@ -175,23 +199,10 @@ whamApp.controller('registrationController', function($scope) {
 
 whamApp.controller('mainController', function($scope, $uibModal) {
 
-	$scope.message = 'Look! I am a home page.';
-	$scope.locations = [ {
-		'name' : 'India',
-		'latitude' : '23.29',
-		'longitude' : '79.2'
-	}, {
-		'name' : 'India - 1',
-		'latitude' : '27.29',
-		'longitude' : '73.2'
-	}, {
-		'name' : 'India - 2',
-		'latitude' : '26.29',
-		'longitude' : '76.2'
-	} ];
 });
 
-whamApp.controller('landingController', function($scope, $http, $rootScope, $location, userService) {
+whamApp.controller('landingController', function($scope, $http, $rootScope,
+		$location, userService) {
 	$scope.categories = [ {
 		value : '1',
 		text : 'Music'
@@ -219,25 +230,30 @@ whamApp.controller('landingController', function($scope, $http, $rootScope, $loc
 		});
 	};
 
-	 $scope.logout = function () {
-			$rootScope.currentUser = null;
-			userService.logout();
-			$location.path('/');
-		};
+	$scope.logout = function() {
+		$rootScope.currentUser = null;
+		userService.logout();
+		$location.path('/');
+	};
 
-	var req = {
-			method : 'GET',
-			url : '/WHAM/api/search',
-			headers : {
-				latitude : $scope.currentLatitude,
-				longitude : $scope.currentLongitude,
-				popular: true
-			}
-		};
-		$http(req).then(function(response) {
-			$scope.currentPage = 1;
-			$scope.pageSize = 10;
-			$scope.records = response.data.records;
+	$scope.showEventsAroundUser = function() {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			$scope.currentLatitude = position.coords.latitude;
+			$scope.currentLongitude = position.coords.longitude;
+			var req = {
+					method : 'GET',
+					url : '/WHAM/api/search',
+					headers : {
+						latitude : $scope.currentLatitude,
+						longitude : $scope.currentLongitude,
+						popular: 'true'
+					}
+				};
+			$http(req).then(function(response) {
+				$scope.currentPage = 1;
+				$scope.pageSize = 10;
+				$scope.records = response.data.records;
+			});
 		});
 
 		$scope.$on('mapInitialized', function(event, map) {
@@ -252,11 +268,11 @@ whamApp.controller('landingController', function($scope, $http, $rootScope, $loc
 			infowindow.setPosition(center);
 			infowindow.open($scope.objMapa);
 		};
-
-
+	}
 });
 
-whamApp.controller('searchController', function($scope, $location, $http, $rootScope) {
+whamApp.controller('searchController', function($scope, $location, $http,
+		$rootScope) {
 
 	$scope.search = function(query) {
 		$rootScope.userQuery = query;
