@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<!-- define angular app -->
+<html ng-app="whamApp">
+
+<head>
+<!-- SCROLLS -->
+<script
+	src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script
+	src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="styles.css">
+<script src="http://mymaplist.com/js/vendor/TweenLite.min.js"></script>
+<!-- SPELLS -->
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+<script src="./scripts/dirPagination.js"></script>
+<script
+	src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+<script src="http://maps.google.com/maps/api/js"></script>
+<script
+	src="//rawgit.com/allenhwkim/angularjs-google-maps/master/build/scripts/ng-map.min.js"></script>
+<script src="./scripts/ui-bootstrap-tpls-0.14.3.min.js"></script>
+<script src="script.js"></script>
+</head>
+
+<!-- define angular controller -->
+<body ng-controller="landingController" ng-init="showEventsAroundUser()">
+	<nav class="navbar navbar-default">
+		<div class="container">
+			<div class="col-md-6">
+				<div class="input-group search-controls" id="adv-search">
+					<input type="text" class="form-control" ng-model="query"
+						placeholder="Enter Keywords (or click the dropdown for advanced search)" />
+					<div class="input-group-btn">
+						<div class="btn-group" role="group">
+							<div class="dropdown dropdown-lg">
+								<button type="button" class="btn btn-default dropdown-toggle"
+									data-toggle="dropdown" aria-expanded="false">
+									<span class="caret"></span>
+								</button>
+								<div class="dropdown-menu dropdown-menu-right" role="menu">
+									<form class="form-horizontal" role="form">
+										<div class="form-group">
+											<label for="filter">Category</label> <select
+												class="form-control"
+												ng-model="selectCategory"
+												ng-options="category as category.text for category in categories">
+											</select>
+										</div>
+										<div class="form-group">
+											<label for="contain">City</label> <input class="form-control" ng-model="city"
+												type="text" />
+										</div>
+										<button type="submit" class="btn btn-primary"
+											ng-click=advancedSearch(selectCategory) ng-controller="searchController">
+											<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+										</button>
+									</form>
+								</div>
+							</div>
+							<button class="btn btn-primary" type="submit" ng-click=search(query)
+								ng-controller="searchController">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<ul class="nav navbar-nav navbar-right">
+					<li ng-show="!currentUser"><a href="#login"><i class="fa fa-sign-in"></i> Login</a></li>
+					<li ng-show="currentUser" ng-click="logout()"><a href="#login"><i class="fa fa-sign-out"></i> Log Out</a></li>
+					<li><a href="#landing"><i class="fa fa-home"></i> Home</a></li>
+					<li ng-show="currentUser"><a href="#profile"><i class="fa fa-user"></i> My Profile</a></li>
+					<li><a href="#contact"><i class="fa fa-comment"></i>
+							Contact</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+
+	<div id="main">
+
+		<!-- angular templating -->
+		<!-- this is where content will be injected -->
+		<div ng-view></div>
+
+	</div>
+
+	<footer class="text-center"> Northeastern University </footer>
+
+</body>
+
+</html>

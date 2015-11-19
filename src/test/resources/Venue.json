@@ -1,0 +1,17 @@
+{
+    "address": {
+        "address_1": "52 Church Street",
+        "address_2": null,
+        "city": "Cambridge",
+        "region": "MA",
+        "postal_code": "02138",
+        "country": "US",
+        "latitude": 42.373975,
+        "longitude": -71.12059299999999
+    },
+    "resource_uri": "https://www.eventbriteapi.com/v3/venues/11768139/",
+    "id": "11768139",
+    "name": "Sinclair-Music Hall",
+    "latitude": "42.373975",
+    "longitude": "-71.12059299999999"
+}
