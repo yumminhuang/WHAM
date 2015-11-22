@@ -205,9 +205,10 @@ public class Event {
             JSONObject address = e.getJSONObject("venue").getJSONObject("address");
             this.longitude = address.getDouble("longitude");
             this.latitude = address.getDouble("latitude");
-            this.address_1 = address.getString("address_1");
+            if (!address.isNull("address_1"))
+                this.address_1 = address.getString("address_1");
             if (!address.isNull("address_2"))
-                this.address_1 = address.getString("address_2");
+                this.address_2 = address.getString("address_2");
             if (!address.isNull("city"))
                 this.city = address.getString("city");
             if (!address.isNull("region"))
