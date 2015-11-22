@@ -9,6 +9,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
+@Table(name="userpreference")
 @NamedQuery(name="Userpreference.findAll", query="SELECT u FROM Userpreference u")
 public class Userpreference implements Serializable {
 	private static final long serialVersionUID = 1L;
