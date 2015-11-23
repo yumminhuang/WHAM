@@ -26,7 +26,7 @@ CREATE TABLE `booking` (
   `uId` int(11) NOT NULL,
   `eId` bigint(20) NOT NULL,
   `comment` varchar(1500) DEFAULT NULL,
-  `like` bit(1) DEFAULT NULL,
+  `dislike` bit(1) DEFAULT NULL,
   `rating` int(11) DEFAULT NULL,
   PRIMARY KEY (`uId`,`eId`),
   KEY `eId_idx` (`eId`),
@@ -85,7 +85,7 @@ CREATE TABLE `user` (
   `status` char(1) DEFAULT NULL,
   PRIMARY KEY (`uId`),
   UNIQUE KEY `emailId_UNIQUE` (`emailId`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -114,4 +114,4 @@ CREATE TABLE `userpreference` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-11-23  0:01:09
+-- Dump completed on 2015-11-23 20:47:21

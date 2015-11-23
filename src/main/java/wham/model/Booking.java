@@ -19,7 +19,7 @@ public class Booking implements Serializable {
 
 	private String comment;
 
-	private byte like;
+	private boolean dislike;
 
 	private int rating;
 
@@ -52,12 +52,12 @@ public class Booking implements Serializable {
 		this.comment = comment;
 	}
 
-	public byte getLike() {
-		return this.like;
+	public boolean getDislike() {
+		return this.dislike;
 	}
 
-	public void setLike(byte like) {
-		this.like = like;
+	public void setDislike(boolean dislike) {
+		this.dislike = dislike;
 	}
 
 	public int getRating() {
