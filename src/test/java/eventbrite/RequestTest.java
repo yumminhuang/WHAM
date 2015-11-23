@@ -17,7 +17,8 @@ public class RequestTest extends TestBase {
 
     @Test
     public void testCategory() {
-        assertEquals(Category.findIdByCategory("Community").getId(), 113);
+        assertEquals(103, Category.getCategoryID("Music"));
+        assertEquals("Music", Category.getCategoryName(103));
     }
 
     @Test

@@ -7,6 +7,8 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import eventbrite.model.Category;
+
 /**
  * Represents a request to the GET /events/search/ API.
  *
@@ -124,8 +126,7 @@ public class SearchRequest extends BaseRequest {
     public void setSubCategories(String[] subcategories) {
         this.subcategories = new int[subcategories.length];
         for (int i = 0; i < subcategories.length; i++)
-            // TODO: Convert subcategories name to ids
-            this.subcategories[i] = Integer.parseInt(subcategories[i]);
+            this.subcategories[i] = Category.getCategoryID(subcategories[i]);
     }
 
     public void setPopular(boolean popular) {
