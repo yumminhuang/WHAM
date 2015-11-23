@@ -14,25 +14,24 @@
 			<br>
 			<ul class="list-group">
 				<li class="list-group-item"
-					dir-paginate="record in records | filter:q | itemsPerPage: pageSize"
-					current-page="currentPage">
-					<div class="row">
-						<div class="col-md-4">
-							<img style="width: 70%; margin-left: 30px; margin-top: 10px;"
-								alt="{{record.name}}" src={{record.logoURL}}>
-						</div>
-						<div class="col-md-8" style="padding: 10px;">
-							<p>
-								<b>{{record.name}}</b>
-							</p>
-							<p>
-								<i class="fa fa-calendar-times-o"></i>&nbsp;{{record.start |
-								date:'medium'}}
-							</p>
-							<p>Capacity:&nbsp;{{record.capacity}}</p>
-						</div>
-					</div>
-				</li>
+					dir-paginate="record in basicSearchRecords | filter:q | itemsPerPage: pageSize"
+					current-page="currentPage"><a href="#eventDetails"><div
+							class="row" ng-click="fetchEventDetails(record)">
+							<div class="col-md-4">
+								<img style="width: 70%; margin-left: 30px; margin-top: 10px;"
+									alt="{{record.name}}" src={{record.logoURL}}>
+							</div>
+							<div class="col-md-8" style="padding: 10px;">
+								<p>
+									<b>{{record.name}}</b>
+								</p>
+								<p>
+									<i class="fa fa-calendar-times-o"></i>&nbsp;{{record.start |
+									date:'medium'}}
+								</p>
+								<p>Capacity:&nbsp;{{record.capacity}}</p>
+							</div>
+						</div></a></li>
 			</ul>
 
 
@@ -44,12 +43,16 @@
 			</div>
 		</div>
 		<div class="col-md-6" style="padding-top: 25px;">
-			<div class="map-view">
-				<map zoom="12" center="[{{currentLatitude}},{{currentLongitude}}]">
-					<marker position="{{record.latitude}}, {{record.longitude}}"
-						ng-repeat="record in records"
-						on-click="showInfoWindow(event, record)"></marker>
-				</map>
+			<div>
+				<ng-map default-style="true"
+					center="[{{currentLatitude}},{{currentLongitude}}]" zoom="12">
+				<marker position="current" animation="Animation.BOUNCE"
+					centered="true"
+					icon="https://upload.wikimedia.org/wikipedia/commons/9/92/Map_marker_icon_%E2%80%93_Nicolas_Mollet_
+					%E2%80%93_Home_%E2%80%93_People_%E2%80%93_Default.png">
+				</marker> <marker position="{{record.latitude}}, {{record.longitude}}"
+					ng-repeat="record in basicSearchRecords"
+					on-click="showInfoWindow(record)"> </marker></ng-map>
 			</div>
 		</div>
 	</div>

@@ -1,4 +1,42 @@
 <div class="container">
-	Hello
-	{{event}}
+	<div class="row">
+		<div class="col-md-4">
+			<img
+				style="width: 100%; margin-left: 30px; margin-top: 10px; max-width: 250px; max-height: 250px; font-size: small; padding: 5px; border: 1px solid black;"
+				alt="{{event.name}}" src={{event.logoURL}}>
+		</div>
+		<div class="col-md-8" style="padding: 12px;">
+			<p>
+				<b style="font-size: x-large;">{{event.name}}</b>
+			</p>
+			<p style="font-size: large;">
+				<i class="fa fa-calendar-times-o"></i>&nbsp;{{event.start |
+				date:'medium'}}
+			</p>
+			<address>
+			 {{event.address_1}}<br>
+			 {{event.region}} - {{event.postal_code}}
+			 {{event.city}}
+			</address>
+			<p style="font-size: large;">Capacity:&nbsp;{{event.capacity}}</p>
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<div class="map-view" style="padding-top: 20px;">
+				<map zoom="14" center="[{{currentLatitude}},{{currentLongitude}}]">
+					<directions draggable="true" travel-mode="DRIVING"
+						origin="current-location"
+						destination="[{{event.latitude}},{{event.longitude}}]">
+					</directions>
+				</map>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<p style="padding-top: 20px; font-size: large;">
+				<span style="font-weight: bold;">Description:</span>&nbsp;{{event.description}}
+			</p>
+		</div>
+	</div>
 </div>
