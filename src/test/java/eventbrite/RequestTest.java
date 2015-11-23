@@ -18,6 +18,7 @@ public class RequestTest extends TestBase {
     @Test
     public void testCategory() {
         assertEquals(103, Category.getCategoryID("Music"));
+        assertEquals(10003, Category.getCategoryID("Food"));
         assertEquals("Music", Category.getCategoryName(103));
     }
 
@@ -54,8 +55,8 @@ public class RequestTest extends TestBase {
     @Test
     public void testEventSearchRequestWithCategories() throws URISyntaxException, RequestException {
         SearchRequest request = new SearchRequest();
-        request.setSubCategories(new String[] { "Alternative", "Rock", "Yoga" });
-        assertEquals("https://www.eventbriteapi.com/v3/events/search?subcategories=3001%2C3017%2C7005",
+        request.setSubCategories(new String[] { "Rock", "Wine" });
+        assertEquals("https://www.eventbriteapi.com/v3/events/search?subcategories=3017%2C10002",
                 request.getUri().toString());
     }
 

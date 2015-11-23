@@ -21,6 +21,42 @@ public class Category {
         tempMap.put("Food & Drink", 110);
         tempMap.put("Science & Technology", 102);
         tempMap.put("Seasonal & Holiday", 116);
+
+        // Music Subcategory
+        tempMap.put("Folk", 3007);
+        tempMap.put("Metal", 3011);
+        tempMap.put("Opera", 3012);
+        tempMap.put("Pop", 3013);
+        tempMap.put("Rock", 3017);
+
+        // Travel & Outdoor subcateogry
+        tempMap.put("Hiking", 9001);
+        tempMap.put("Rafting", 9002);
+        tempMap.put("Kayaking", 9003);
+        tempMap.put("Canoeing", 9004);
+        tempMap.put("Climbing", 9005);
+
+        // Food & Drink subcategory
+        tempMap.put("Beer", 10001);
+        tempMap.put("Wine", 10002);
+        tempMap.put("Food", 10003);
+        tempMap.put("Spirits", 10004);
+        tempMap.put("Other", 10999);
+
+        // Science & Technology subcategory
+        tempMap.put("Medicine", 2001);
+        tempMap.put("Biotech", 2003);
+        tempMap.put("Mobile", 2005);
+        tempMap.put("Robotics", 2007);
+        tempMap.put("Science", 2002);
+
+        // "Seasonal & Holiday subcategory
+        tempMap.put("Easter", 16002);
+        tempMap.put("Halloween/Haunt", 16004);
+        tempMap.put("Thanksgiving", 16005);
+        tempMap.put("Christmas", 16006);
+        tempMap.put("Channukah", 16007);
+
         CATEGORY_TO_ID = Collections.unmodifiableMap(tempMap);
     }
 
