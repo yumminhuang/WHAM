@@ -30,9 +30,16 @@ public class Event {
 
     /*
      * These two attributes only exist when adding expend in search request
+     * This is a kludge to get all data in one request.
      */
+    private String address_1;
+    private String address_2;
+    private String city;
+    private String region;
+    private String postal_code;
     private Double longitude;
     private Double latitude;
+
 
     public Event() {
 
@@ -164,6 +171,11 @@ public class Event {
         e.put("logoURL", logo_url);
         e.put("longitude", longitude);
         e.put("latitude", latitude);
+        e.put("address_1", address_1);
+        e.put("address_2", address_2);
+        e.put("city", city);
+        e.put("region", region);
+        e.put("postal_code", postal_code);
         return e;
     }
 
@@ -190,8 +202,19 @@ public class Event {
         if (e.has("logo") && !e.isNull("logo"))
             this.logo_url = e.getJSONObject("logo").getString("url");
         if (e.has("venue") && !e.isNull("venue")) {
-            this.longitude = e.getJSONObject("venue").getJSONObject("address").getDouble("longitude");
-            this.latitude = e.getJSONObject("venue").getJSONObject("address").getDouble("latitude");
+            JSONObject address = e.getJSONObject("venue").getJSONObject("address");
+            this.longitude = address.getDouble("longitude");
+            this.latitude = address.getDouble("latitude");
+            if (!address.isNull("address_1"))
+                this.address_1 = address.getString("address_1");
+            if (!address.isNull("address_2"))
+                this.address_2 = address.getString("address_2");
+            if (!address.isNull("city"))
+                this.city = address.getString("city");
+            if (!address.isNull("region"))
+                this.region = address.getString("region");
+            if (!address.isNull("postal_code"))
+                this.postal_code = address.getString("postal_code");
         }
         return this;
     }
