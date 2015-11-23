@@ -17,7 +17,7 @@ public class Userpreference implements Serializable {
 	@EmbeddedId
 	private UserpreferencePK id;
 
-	private double categoryId;
+	private int categoryId;
 
 	//bi-directional many-to-one association to User
 	@ManyToOne
@@ -35,11 +35,11 @@ public class Userpreference implements Serializable {
 		this.id = id;
 	}
 
-	public double getCategoryId() {
+	public int getCategoryId() {
 		return this.categoryId;
 	}
 
-	public void setCategoryId(double categoryId) {
+	public void setCategoryId(int categoryId) {
 		this.categoryId = categoryId;
 	}
 

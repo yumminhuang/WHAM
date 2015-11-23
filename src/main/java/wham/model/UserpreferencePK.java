@@ -15,7 +15,7 @@ public class UserpreferencePK implements Serializable {
 	@Column(insertable=false, updatable=false)
 	private int uId;
 
-	private double subCategoryId;
+	private int subCategoryId;
 
 	public UserpreferencePK() {
 	}
@@ -25,10 +25,10 @@ public class UserpreferencePK implements Serializable {
 	public void setUId(int uId) {
 		this.uId = uId;
 	}
-	public double getSubCategoryId() {
+	public int getSubCategoryId() {
 		return this.subCategoryId;
 	}
-	public void setSubCategoryId(double subCategoryId) {
+	public void setSubCategoryId(int subCategoryId) {
 		this.subCategoryId = subCategoryId;
 	}
 
@@ -49,7 +49,7 @@ public class UserpreferencePK implements Serializable {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.uId;
-		hash = hash * prime + ((int) (java.lang.Double.doubleToLongBits(this.subCategoryId) ^ (java.lang.Double.doubleToLongBits(this.subCategoryId) >>> 32)));
+		hash = hash * prime + this.subCategoryId;
 		
 		return hash;
 	}

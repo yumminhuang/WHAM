@@ -16,7 +16,7 @@ public class BookingPK implements Serializable {
 	private int uId;
 
 	@Column(insertable=false, updatable=false)
-	private double eId;
+	private String eId;
 
 	public BookingPK() {
 	}
@@ -26,10 +26,10 @@ public class BookingPK implements Serializable {
 	public void setUId(int uId) {
 		this.uId = uId;
 	}
-	public double getEId() {
+	public String getEId() {
 		return this.eId;
 	}
-	public void setEId(double eId) {
+	public void setEId(String eId) {
 		this.eId = eId;
 	}
 
@@ -43,14 +43,14 @@ public class BookingPK implements Serializable {
 		BookingPK castOther = (BookingPK)other;
 		return 
 			(this.uId == castOther.uId)
-			&& (this.eId == castOther.eId);
+			&& this.eId.equals(castOther.eId);
 	}
 
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
 		hash = hash * prime + this.uId;
-		hash = hash * prime + ((int) (java.lang.Double.doubleToLongBits(this.eId) ^ (java.lang.Double.doubleToLongBits(this.eId) >>> 32)));
+		hash = hash * prime + this.eId.hashCode();
 		
 		return hash;
 	}

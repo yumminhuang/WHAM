@@ -17,7 +17,7 @@ public class Event implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private double eId;
+	private String eId;
 
 	@Column(name="address_1")
 	private String address1;
@@ -27,7 +27,7 @@ public class Event implements Serializable {
 
 	private int capacity;
 
-	private double categoryID;
+	private int categoryID;
 
 	private String city;
 
@@ -46,7 +46,7 @@ public class Event implements Serializable {
 
 	private String name;
 
-	private double organizerID;
+	private int organizerID;
 
 	@Column(name="postal_code")
 	private String postalCode;
@@ -56,7 +56,7 @@ public class Event implements Serializable {
 
 	private String status;
 
-	private double subCategoryID;
+	private int subCategoryID;
 
 	private String url;
 
@@ -67,11 +67,11 @@ public class Event implements Serializable {
 	public Event() {
 	}
 
-	public double getEId() {
+	public String getEId() {
 		return this.eId;
 	}
 
-	public void setEId(double eId) {
+	public void setEId(String eId) {
 		this.eId = eId;
 	}
 
@@ -99,11 +99,11 @@ public class Event implements Serializable {
 		this.capacity = capacity;
 	}
 
-	public double getCategoryID() {
+	public int getCategoryID() {
 		return this.categoryID;
 	}
 
-	public void setCategoryID(double categoryID) {
+	public void setCategoryID(int categoryID) {
 		this.categoryID = categoryID;
 	}
 
@@ -163,11 +163,11 @@ public class Event implements Serializable {
 		this.name = name;
 	}
 
-	public double getOrganizerID() {
+	public int getOrganizerID() {
 		return this.organizerID;
 	}
 
-	public void setOrganizerID(double organizerID) {
+	public void setOrganizerID(int organizerID) {
 		this.organizerID = organizerID;
 	}
 
@@ -195,11 +195,11 @@ public class Event implements Serializable {
 		this.status = status;
 	}
 
-	public double getSubCategoryID() {
+	public int getSubCategoryID() {
 		return this.subCategoryID;
 	}
 
-	public void setSubCategoryID(double subCategoryID) {
+	public void setSubCategoryID(int subCategoryID) {
 		this.subCategoryID = subCategoryID;
 	}
 
