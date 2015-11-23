@@ -1,5 +1,6 @@
 package wham.operation;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -9,8 +10,15 @@ public class EventOperation {
 
     EntityManagerFactory factory = Persistence.createEntityManagerFactory("WHAM");
 
-    public boolean createEvent(Event event) {
-        return false;
+    /**
+     * Insert new Event object into database
+     * @param event
+     */
+    public void createEvent(Event event) {
+        EntityManager em = factory.createEntityManager();
+        em.getTransaction().begin();
+        em.persist(event);
+        em.getTransaction().commit();
+        em.close();
     }
-
 }

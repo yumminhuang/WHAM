@@ -14,13 +14,13 @@ public class UserOperation {
     EntityManagerFactory factory = Persistence.createEntityManagerFactory("WHAM");
 
     /**
-     * Insert newUser into database
-     * @param newUser User object
+     * Insert new User into database
+     * @param user User object
      */
-    public void createUser(User newUser) {
+    public void createUser(User user) {
         EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
-        em.persist(newUser);
+        em.persist(user);
         em.getTransaction().commit();
         em.close();
     }

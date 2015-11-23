@@ -9,11 +9,11 @@ public class PreferenceOperation {
 
     EntityManagerFactory factory = Persistence.createEntityManagerFactory("WHAM");
 
-    public boolean createPreference(String email, List<Double> subcatrogries) {
+    public boolean createPreference(String email, List<Long> subcatrogries) {
         return false;
     }
 
-    public boolean updatePreference(String email, List<Double> subcatrogries) {
+    public boolean updatePreference(String email, List<Long> subcatrogries) {
         return false;
     }
 
