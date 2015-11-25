@@ -27,6 +27,7 @@ public class SearchRequest extends BaseRequest {
     private String venue_city;
     private String venue_country;
     private int[] subcategories;
+    private int category;
     private boolean popular;
     private int page;
     private String expand;
@@ -49,6 +50,7 @@ public class SearchRequest extends BaseRequest {
         addParameter("location.within", location_within, params);
         addParameter("location.latitude", location_latitude, params);
         addParameter("location.longitude", location_longitude, params);
+        addParameter("categories", category, params);
         addParameter("venue.city", venue_city, params);
         addParameter("venue.country", venue_country, params);
         addParameter("sort_by", sortBy, params);
@@ -127,6 +129,10 @@ public class SearchRequest extends BaseRequest {
         this.subcategories = new int[subcategories.length];
         for (int i = 0; i < subcategories.length; i++)
             this.subcategories[i] = Category.getCategoryID(subcategories[i]);
+    }
+
+    public void setCategory(String category) {
+        this.category = Category.getCategoryID(category);
     }
 
     public void setPopular(boolean popular) {

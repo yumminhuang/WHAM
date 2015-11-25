@@ -50,6 +50,9 @@ public class WebService {
             String value = headers.getRequestHeader(key).get(0);
             switch (key) {
             case "category":
+                request.setCategory(value);
+                break;
+            case "subcategory":
                 request.setSubCategories(value.split(","));
                 break;
             case "keywords":
