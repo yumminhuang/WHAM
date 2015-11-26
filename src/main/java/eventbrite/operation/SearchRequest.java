@@ -27,7 +27,7 @@ public class SearchRequest extends BaseRequest {
     private String venue_city;
     private String venue_country;
     private int[] subcategories;
-    private int category;
+    private String category;
     private boolean popular;
     private int page;
     private String expand;
@@ -132,7 +132,7 @@ public class SearchRequest extends BaseRequest {
     }
 
     public void setCategory(String category) {
-        this.category = Category.getCategoryID(category);
+        this.category = String.valueOf(Category.getCategoryID(category));
     }
 
     public void setPopular(boolean popular) {
