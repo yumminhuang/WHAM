@@ -59,10 +59,34 @@ whamApp.config(function($routeProvider) {
 		templateUrl : 'pages/profile.html',
 		controller : 'profileController'
 	})
+	
+	.when('/preferences', {
+		templateUrl : 'pages/preferences.html',
+		controller : 'preferencesFormController'
+	})
 
 	.otherwise({
 		redirectTo : '/'
 	});
+});
+
+whamApp.directive('googleplace', function() {
+    return {
+        require: 'ngModel',
+        link: function(scope, element, attrs, model) {
+            var options = {
+                types: [],
+                componentRestrictions: {}
+            };
+            scope.gPlace = new google.maps.places.Autocomplete(element[0], options);
+
+            google.maps.event.addListener(scope.gPlace, 'place_changed', function() {
+                scope.$apply(function() {
+                    model.$setViewValue(element.val());                
+                });
+            });
+        }
+    };
 });
 
 whamApp.factory('userService', function() {
@@ -170,12 +194,23 @@ whamApp.controller('basicSearchController', function($scope, $rootScope, $http,
 		infowindow.open($scope.objMapa);
 	};
 
-	$scope.fetchEventDetails = function() {
-		debugger;
-		console.log('yesss');
-		$rootScope.event = $scope.ecopoint;
+	$scope.fetchEventDetails = function(record) {
+		if(record === undefined) {
+			$rootScope.event = $scope.ecopoint;
+		} else {
+			$rootScope.event = record;
+		}
+		
 		$location.path('eventDetails');
 	}
+});
+
+whamApp.controller('preferencesFormController', function($scope) {
+	$scope.formData = {};
+	$scope.v = true;
+	$scope.savePreferences = function(preferences) {
+		alert(preferences);
+	};
 });
 
 whamApp.controller('advancedSearchController', function($http, $scope,
@@ -264,6 +299,7 @@ whamApp.controller('landingController', function($scope, $http, $rootScope,
 		userService.logout();
 		$location.path('/');
 	};
+
 
 	$scope.showEventsAroundUser = function() {
 		navigator.geolocation.getCurrentPosition(function(position) {
