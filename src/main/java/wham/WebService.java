@@ -61,8 +61,8 @@ public class WebService {
             case "sortby":
                 request.setSortBy(value);
                 break;
-            case "city":
-                request.setVenue_city(value);
+            case "address":
+                request.setLocation_address(value);
                 break;
             case "popular":
                 request.setPopular(Boolean.parseBoolean(value));
