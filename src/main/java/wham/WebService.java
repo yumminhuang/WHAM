@@ -83,7 +83,7 @@ public class WebService {
             }
         }
         // Always expand venue for getting location
-        request.setExpand("venue");
+        request.setExpand("venue,category,ticket_classes");
         EventsSearchResult events = client.search(request);
         return events.serialize();
     }
