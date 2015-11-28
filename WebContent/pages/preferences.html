@@ -1,0 +1,45 @@
+<div class="container">
+<div ng-controller="preferencesFormController">
+<div class="col-xs-12 col-sm-10 col-sm-offset-1">
+
+    <h2>Select your preferred events!</h2>
+
+    <form>
+    
+       
+        <!-- MULTIPLE CHECKBOXES -->
+        <label>Food</label>
+        <div class="form-group">
+            <label class="checkbox-inline">
+                <input type="checkbox" name="favoriteFood" ng-model="formData.food.chinese"> Chinese
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="favoriteFood" ng-model="formData.food.indian"> Indian
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="favoriteFood" ng-model="formData.food.mexican"> Mexican
+            </label>
+        </div>
+        
+        <label>Music</label>
+        <div class="form-group">
+            <label class="checkbox-inline">
+                <input type="checkbox" name="favoriteMusic" ng-model="formData.music.rock"> Rock
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="favoriteMusic" ng-model="formData.music.jazz"> Jazz
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="favoriteMusic" ng-model="formData.music.pop"> Pop
+            </label>
+        </div>
+        <button type="submit" class="btn btn-success" ng-click="savePreferences(formData)">Save</button>
+    </form>
+    
+    <!-- SHOW OFF OUR FORMDATA OBJECT -->
+    <h2>Sample Form Object</h2>
+    <pre>
+        {{ formData }}
+    </pre>
+ 
+</div>
