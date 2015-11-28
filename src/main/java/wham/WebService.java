@@ -11,24 +11,24 @@ import javax.ws.rs.core.HttpHeaders;
 import eventbrite.Credentials;
 import eventbrite.EventbriteClient;
 import eventbrite.exception.RequestException;
+import eventbrite.operation.EventRequest;
 import eventbrite.operation.EventsSearchResult;
 import eventbrite.operation.SearchRequest;
-import eventbrite.operation.VenueRequest;
 
 @Path("/")
 public class WebService {
 
     @GET
-    @Path("/venue/{id}")
+    @Path("/event/{id}")
     /**
-     * Get Venue details by id
-     * @param id Venue id
-     * @return JSON describe venue
+     * Get Event details by id
+     * @param id Event id
+     * @return JSON describe event
      * @throws RequestException
      */
-    public String getVenusDetails(@PathParam("id") String id) throws RequestException {
+    public String getEventDetails(@PathParam("id") String id) throws RequestException {
         EventbriteClient client = new EventbriteClient(new Credentials());
-        VenueRequest request = new VenueRequest();
+        EventRequest request = new EventRequest();
         request.setId(Long.parseLong(id));
         return client.get(request).serialize();
     }
@@ -50,6 +50,9 @@ public class WebService {
             String value = headers.getRequestHeader(key).get(0);
             switch (key) {
             case "category":
+                request.setCategory(value);
+                break;
+            case "subcategory":
                 request.setSubCategories(value.split(","));
                 break;
             case "keywords":
@@ -58,8 +61,8 @@ public class WebService {
             case "sortby":
                 request.setSortBy(value);
                 break;
-            case "city":
-                request.setVenue_city(value);
+            case "address":
+                request.setLocation_address(value);
                 break;
             case "popular":
                 request.setPopular(Boolean.parseBoolean(value));

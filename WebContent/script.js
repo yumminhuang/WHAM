@@ -1,6 +1,6 @@
 // create the module and name it scotchApp
 var whamApp = angular.module('whamApp', [ 'ngRoute', 'ngMap', 'ui.bootstrap',
-		'angularUtils.directives.dirPagination' ]);
+		'angularUtils.directives.dirPagination', 'base64', 'td.easySocialShare' ]);
 
 // configure our routes
 whamApp.config(function($routeProvider) {
@@ -50,14 +50,45 @@ whamApp.config(function($routeProvider) {
 		controller : 'basicSearchController'
 	})
 
+	.when('/eventDetails/:eventId', {
+		templateUrl : 'pages/eventDetail.html',
+		controller : 'eventDetailsController'
+	})
+
 	.when('/profile', {
 		templateUrl : 'pages/profile.html',
 		controller : 'profileController'
 	})
 
+	.when('/preferences', {
+		templateUrl : 'pages/preferences.html',
+		controller : 'preferencesFormController'
+	})
+
 	.otherwise({
 		redirectTo : '/'
 	});
+});
+
+whamApp.directive('googleplace', function() {
+	return {
+		require : 'ngModel',
+		link : function(scope, element, attrs, model) {
+			var options = {
+				types : [],
+				componentRestrictions : {}
+			};
+			scope.gPlace = new google.maps.places.Autocomplete(element[0],
+					options);
+
+			google.maps.event.addListener(scope.gPlace, 'place_changed',
+					function() {
+						scope.$apply(function() {
+							model.$setViewValue(element.val());
+						});
+					});
+		}
+	};
 });
 
 whamApp.factory('userService', function() {
@@ -113,80 +144,122 @@ whamApp.controller('profileController', function() {
 
 });
 
-whamApp.controller('basicSearchController',
-		function($scope, $rootScope, $http) {
-			$scope.query = $rootScope.userQuery;
-			$scope.records = [];
+whamApp.controller('eventDetailsController', function($rootScope, $routeParams,
+		$scope, $http, $location) {
+	$scope.event = [];
+	var eventId = $routeParams.eventId;
+	var req = {
+		method : 'GET',
+		url : '/WHAM/api/event/' + eventId,
+		headers : {
+			id : eventId
+		}
+	};
 
-			navigator.geolocation.getCurrentPosition(function(position) {
-				$scope.currentLatitude = position.coords.latitude;
-				$scope.currentLongitude = position.coords.longitude;
-
-				var req = {
-						method : 'GET',
-						url : '/WHAM/api/search',
-						headers : {
-							latitude: $scope.currentLatitude,
-							longitude: $scope.currentLongitude,
-							keywords : $scope.query
-						}
-					};
-					$http(req).then(function(response) {
-						$scope.currentPage = 1;
-						$scope.pageSize = 10;
-						$scope.records = response.data.records;
-					});
-			});
-
-			$scope.$on('mapInitialized', function(event, map) {
-				$scope.objMapa = map;
-			});
-			$scope.showInfoWindow = function(event, record) {
-				var infowindow = new google.maps.InfoWindow();
-				var center = new google.maps.LatLng(record.latitude,
-						record.longitude);
-
-				infowindow.setContent(record.name);
-
-				infowindow.setPosition(center);
-				infowindow.open($scope.objMapa);
-			};
-		});
+	$http(req).then(function(response) {
+		$scope.event = response.data;
+	});
+});
 
 whamApp.controller('advancedSearchController', function($http, $scope,
-		$rootScope) {
-
-	var category = $rootScope.selectedCategory;
-	var city = $rootScope.selectedCity;
-	$scope.records = [];
+		$rootScope, $routeParams, $location, $base64, $window) {
+	$scope.advancedSearchRecords = [];
+	var category = $base64.decode($routeParams.category);
+	var address = String($base64.decode($routeParams.city));
 	var req = {
 		method : 'GET',
 		url : '/WHAM/api/search',
 		headers : {
 			category : category,
-			city : city
+			address : address
 		}
 	};
 	$http(req).then(function(response) {
 		$scope.currentPage = 1;
 		$scope.pageSize = 10;
-		$scope.currentCity = $rootScope.selectedCity;
-		$scope.records = response.data.records;
+		$scope.searchedCity = address;
+		$scope.advancedSearchRecords = response.data.records;
 	});
 
 	$scope.$on('mapInitialized', function(event, map) {
 		$scope.objMapa = map;
 	});
+
 	$scope.showInfoWindow = function(event, record) {
+		$rootScope.event = record;
 		var infowindow = new google.maps.InfoWindow();
 		var center = new google.maps.LatLng(record.latitude, record.longitude);
 
-		infowindow.setContent(record.name);
+		var funcToCall = '<a target="_blank" href="#/eventDetails/' + record.id
+				+ '">' + record.name + '</a>';
+
+		infowindow.setContent(funcToCall);
 
 		infowindow.setPosition(center);
 		infowindow.open($scope.objMapa);
 	};
 
+	$scope.fetchEventDetails = function(eventId) {
+		console.log(JSON.stringify(eventId));
+		$window.open('#/eventDetails/' + eventId);
+	}
+
+});
+
+whamApp.controller('basicSearchController', function($scope, $rootScope, $http,
+		$location, $routeParams, $base64, $compile, $parse, $window) {
+
+	$scope.query = $base64.decode($routeParams.query);
+	$scope.basicSearchRecords = [];
+	navigator.geolocation.getCurrentPosition(function(position) {
+		$scope.currentLatitude = position.coords.latitude;
+		$scope.currentLongitude = position.coords.longitude;
+
+		var req = {
+			method : 'GET',
+			url : '/WHAM/api/search',
+			headers : {
+				latitude : $scope.currentLatitude,
+				longitude : $scope.currentLongitude,
+				keywords : $scope.query
+			}
+		};
+		$http(req).then(function(response) {
+			$scope.currentPage = 1;
+			$scope.pageSize = 10;
+			$scope.basicSearchRecords = response.data.records;
+		});
+	});
+
+	$scope.$on('mapInitialized', function(event, map) {
+		$scope.objMapa = map;
+	});
+
+	$scope.showInfoWindow = function(event, record) {
+		$rootScope.event = record;
+		var infowindow = new google.maps.InfoWindow();
+		var center = new google.maps.LatLng(record.latitude, record.longitude);
+
+		var funcToCall = '<a target="_blank" href="#/eventDetails/' + record.id
+				+ '">' + record.name + '</a>';
+
+		infowindow.setContent(funcToCall);
+
+		infowindow.setPosition(center);
+		infowindow.open($scope.objMapa);
+	};
+
+	$scope.fetchEventDetails = function(eventId) {
+		$window.open('#/eventDetails/' + eventId, '_blank');
+	}
+});
+
+whamApp.controller('preferencesFormController', function($scope) {
+	$scope.formData = {};
+	$scope.v = true;
+	$scope.savePreferences = function(preferences) {
+		alert(preferences);
+	};
 });
 
 whamApp.controller('registrationController', function($scope) {
@@ -208,16 +281,13 @@ whamApp.controller('landingController', function($scope, $http, $rootScope,
 		text : 'Music'
 	}, {
 		value : '2',
-		text : 'Arts'
+		text : 'Travel & Outdoor'
 	}, {
 		value : '3',
 		text : 'Food & Drink'
 	}, {
 		value : '4',
-		text : 'Health'
-	}, {
-		value : '5',
-		text : 'Fashion'
+		text : 'Seasonal & Holiday'
 	}, {
 		value : '6',
 		text : 'Science & Tech'
@@ -225,8 +295,8 @@ whamApp.controller('landingController', function($scope, $http, $rootScope,
 
 	$scope.getCurrentUserLocation = function() {
 		navigator.geolocation.getCurrentPosition(function(position) {
-			$scope.currentLatitude = position.coords.latitude;
-			$scope.currentLongitude = position.coords.longitude;
+			$rootScope.currentLatitude = position.coords.latitude;
+			$rootScope.currentLongitude = position.coords.longitude;
 		});
 	};
 
@@ -241,14 +311,14 @@ whamApp.controller('landingController', function($scope, $http, $rootScope,
 			$scope.currentLatitude = position.coords.latitude;
 			$scope.currentLongitude = position.coords.longitude;
 			var req = {
-					method : 'GET',
-					url : '/WHAM/api/search',
-					headers : {
-						latitude : $scope.currentLatitude,
-						longitude : $scope.currentLongitude,
-						popular: 'true'
-					}
-				};
+				method : 'GET',
+				url : '/WHAM/api/search',
+				headers : {
+					latitude : $scope.currentLatitude,
+					longitude : $scope.currentLongitude,
+					popular : 'true'
+				}
+			};
 			$http(req).then(function(response) {
 				$scope.currentPage = 1;
 				$scope.pageSize = 10;
@@ -260,10 +330,15 @@ whamApp.controller('landingController', function($scope, $http, $rootScope,
 			$scope.objMapa = map;
 		});
 		$scope.showInfoWindow = function(event, record) {
+			$rootScope.event = record;
 			var infowindow = new google.maps.InfoWindow();
-			var center = new google.maps.LatLng(record.latitude, record.longitude);
+			var center = new google.maps.LatLng(record.latitude,
+					record.longitude);
 
-			infowindow.setContent(record.name);
+			var funcToCall = '<a target="_blank" href="#/eventDetails/'
+					+ record.id + '">' + record.name + '</a>';
+
+			infowindow.setContent(funcToCall);
 
 			infowindow.setPosition(center);
 			infowindow.open($scope.objMapa);
@@ -272,22 +347,20 @@ whamApp.controller('landingController', function($scope, $http, $rootScope,
 });
 
 whamApp.controller('searchController', function($scope, $location, $http,
-		$rootScope) {
+		$rootScope, $base64) {
 
 	$scope.search = function(query) {
 		$rootScope.userQuery = query;
-		$location.path('/search/' + query);
+		$location.path('/search/' + $base64.encode(query));
 	};
 
 	$scope.advancedSearch = function(category) {
-		$rootScope.selectedCategory = category.text;
-		$rootScope.selectedCity = $scope.city;
-
 		var myEl = angular.element(document.querySelector('.dropdown'));
 		if (myEl.hasClass('open')) {
 			myEl.removeClass('open');
 		}
-		$location.path('/advancedSearch/' + category.text + '/' + $scope.city);
+		$location.path('/advancedSearch/' + $base64.encode(category.text) + '/'
+				+ $base64.encode($scope.city));
 	}
 });
 
