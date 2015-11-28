@@ -32,10 +32,21 @@ public final class SearchEventsTest extends TestBase {
         SearchRequest request = new SearchRequest();
         request.setVenue_city("Boston");
         request.setKeywords(new String[] { "Rock"});
-        request.setExpand("venue");
         EventsSearchResult events = client.search(request);
         assertNotNull(events.getEvents());
-        assertNotNull(events.serialize().contains("latitude"));
+    }
+
+    @Test
+    public void testExpandValue() throws RequestException {
+        SearchRequest request = new SearchRequest();
+        request.setVenue_city("Boston");
+        request.setKeywords(new String[] { "Rock" });
+        request.setExpand("venue,category,ticket_classes");
+        EventsSearchResult events = client.search(request);
+        String json = events.serialize();
+        assertNotNull(json.contains("latitude"));
+        assertNotNull(json.contains("free"));
+        assertNotNull(json.contains("category"));
     }
 
     @Test

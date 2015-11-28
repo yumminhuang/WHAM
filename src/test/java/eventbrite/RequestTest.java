@@ -26,7 +26,7 @@ public class RequestTest extends TestBase {
     public void testGetEventRequest() throws URISyntaxException, RequestException {
         EventRequest request = new EventRequest();
         request.setId(19104519131l);
-        assertEquals("https://www.eventbriteapi.com/v3/events/19104519131", request.getUri().toString());
+        assertEquals("https://www.eventbriteapi.com/v3/events/19104519131?expand=venue", request.getUri().toString());
     }
 
     @Test
