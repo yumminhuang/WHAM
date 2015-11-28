@@ -217,7 +217,8 @@ whamApp.controller('advancedSearchController', function($http, $scope,
 		$rootScope, $routeParams, $location, $base64) {
 	$scope.advancedSearchRecords = [];
 	var category = $base64.decode($routeParams.category);
-	var city = $base64.decode($routeParams.city);
+	//var city = String($base64.decode($routeParams.city));
+	var city = 'Boston';
 	var req = {
 		method : 'GET',
 		url : '/WHAM/api/search',
