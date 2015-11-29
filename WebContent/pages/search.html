@@ -12,11 +12,12 @@
 				</div>
 			</div>
 			<br>
+			<div style="overflow:auto; height:390px;">
 			<ul class="list-group">
 				<li class="list-group-item"
 					dir-paginate="record in basicSearchRecords | filter:q | itemsPerPage: pageSize"
-					current-page="currentPage"><a href="#eventDetails"><div
-							class="row" ng-click="fetchEventDetails(record.id)">
+					current-page="currentPage"><a href="#eventDetails/{{record.id}}" target="_blank"><div
+							class="row">
 							<div class="col-md-4">
 								<img style="width: 70%; margin-left: 30px; margin-top: 10px;"
 									alt="{{record.name}}" ng-src={{record.logoURL}}>
@@ -27,13 +28,13 @@
 								</p>
 								<p>
 									<i class="fa fa-calendar-times-o"></i>&nbsp;{{record.start |
-									date:'medium'}}
+									date:'EEE, MMM dd yyyy, hh:mm a'}}
 								</p>
 								<p>Capacity:&nbsp;{{record.capacity}}</p>
 							</div>
 						</div></a></li>
 			</ul>
-
+			</div>
 
 
 			<div class="text-center">
@@ -44,7 +45,7 @@
 		</div>
 		<div class="col-md-6" style="padding-top: 25px;">
 			<div>
-				<ng-map default-style="true"
+				<ng-map style="height: 450px;"
 					center="[{{currentLatitude}},{{currentLongitude}}]" zoom="12">
 				<marker position="current" animation="Animation.BOUNCE"
 					centered="true"
