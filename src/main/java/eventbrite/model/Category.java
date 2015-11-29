@@ -1,83 +1,148 @@
 package eventbrite.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @Author: yummin
  * Date: 15/11/6
  */
-public enum Category {
-    MUSIC(103, "Music"),
+public class Category {
+    private static final Map<String, Integer> CATEGORY_TO_ID;
+    private static final Map<String, ArrayList<String>> CATEGORY_TO_SUBCATEGORY;
 
-    BUSINESS(101, "Business"),
+    static {
+        Map<String, Integer> tempMap = new HashMap<String, Integer>();
+        tempMap.put("Music", 103);
+        tempMap.put("Travel & Outdoor", 109);
+        tempMap.put("Food & Drink", 110);
+        tempMap.put("Science & Technology", 102);
+        tempMap.put("Seasonal & Holiday", 116);
 
-    FOOD_DRINK(110, "Food & Drink"),
+        // Music Subcategory
+        tempMap.put("Folk", 3007);
+        tempMap.put("Metal", 3011);
+        tempMap.put("Opera", 3012);
+        tempMap.put("Pop", 3013);
+        tempMap.put("Rock", 3017);
 
-    COMMUNITY(113, "Community"),
+        // Travel & Outdoor subcateogry
+        tempMap.put("Hiking", 9001);
+        tempMap.put("Rafting", 9002);
+        tempMap.put("Kayaking", 9003);
+        tempMap.put("Canoeing", 9004);
+        tempMap.put("Climbing", 9005);
 
-    ARTS(105, "Arts"),
+        // Food & Drink subcategory
+        tempMap.put("Beer", 10001);
+        tempMap.put("Wine", 10002);
+        tempMap.put("Food", 10003);
+        tempMap.put("Spirits", 10004);
+        tempMap.put("Other", 10999);
 
-    FILM_MEDIA(104, "Film & Media"),
+        // Science & Technology subcategory
+        tempMap.put("Medicine", 2001);
+        tempMap.put("Biotech", 2003);
+        tempMap.put("Mobile", 2005);
+        tempMap.put("Robotics", 2007);
+        tempMap.put("Science", 2002);
 
-    SPORTS_FITNESS(108, "Sports & Fitness"),
+        // "Seasonal & Holiday subcategory
+        tempMap.put("Easter", 16002);
+        tempMap.put("Halloween/Haunt", 16004);
+        tempMap.put("Thanksgiving", 16005);
+        tempMap.put("Christmas", 16006);
+        tempMap.put("Channukah", 16007);
 
-    HEALTH(107, "Health"),
+        CATEGORY_TO_ID = Collections.unmodifiableMap(tempMap);
+    }
 
-    SCIENCE_TECH(102, "Science & Tech"),
+    static {
+        Map<String, ArrayList<String>> tempMap = new HashMap<String, ArrayList<String>>();
+        ArrayList<String> subcategory = new ArrayList<String>();
 
-    TRAVEL_OUTDOOR(109, "Travel & Outdoor"),
+        subcategory.add("Folk");
+        subcategory.add("Metal");
+        subcategory.add("Opera");
+        subcategory.add("Pop");
+        subcategory.add("Rock");
+        tempMap.put("Music", subcategory);
 
-    CHARITY_CAUSES(111, "Charity & Causes"),
+        subcategory = new ArrayList<String>();
+        subcategory.add("Hiking");
+        subcategory.add("Rafting");
+        subcategory.add("Kayaking");
+        subcategory.add("Canoeing");
+        subcategory.add("Climbing");
+        tempMap.put("Travel & Outdoor", subcategory);
 
-    SPIRITUALITY(114, "Spirituality"),
+        subcategory = new ArrayList<String>();
+        subcategory.add("Beer");
+        subcategory.add("Wine");
+        subcategory.add("Food");
+        subcategory.add("Spirits");
+        subcategory.add("Other");
+        tempMap.put("Food & Drink", subcategory);
 
-    FAMILY_EDUCATION(115, "Family & Education"),
+        subcategory = new ArrayList<String>();
+        subcategory.add("Medicine");
+        subcategory.add("Biotech");
+        subcategory.add("Mobile");
+        subcategory.add("Robotics");
+        subcategory.add("Science");
+        tempMap.put("Science & Technology", subcategory);
 
-    HOLIDAY(116, "Holiday"),
+        subcategory = new ArrayList<String>();
+        subcategory.add("Easter");
+        subcategory.add("Halloween/Haunt");
+        subcategory.add("Thanksgiving");
+        subcategory.add("Christmas");
+        subcategory.add("Channukah");
+        tempMap.put("Seasonal & Holiday", subcategory);
 
-    GOVERNMENT(112, "Government"),
-
-    FASHION(106, "Fashion"),
-
-    HOME_LIFESTYLE(117, "Home & Lifestyle"),
-
-    AUTO_BOAT_AIR(118, "Auto, Boat & Air"),
-
-    HOBBIES(119, "Hobbies"),
-
-    OTHER(199, "Other");
-
-
-    private final long id;
-    private final String name;
-
-    private Category(long id, String name) {
-        this.id = id;
-        this.name = name;
+        CATEGORY_TO_SUBCATEGORY = Collections.unmodifiableMap(tempMap);
     }
 
     /**
-     * Gets the category name as used by the Eventbrite APIs.
-     *
-     * @return A String representing the category name.
+     * Find id for the given category name or subcategory name
+     * @param name
+     * @return
      */
-    public String getName() {
-        return name;
+    public static int getCategoryID(String name) {
+        return CATEGORY_TO_ID.get(name);
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public static Category findIdByCategory(String keyword) {
-        for(Category v : values()){
-            if( v.name.equals(keyword)){
-                return v;
-            }
-        }
+    /**
+     * Find category name or subcategory name for the given id
+     * @param id
+     * @return
+     */
+    public static String getCategoryName(int id) {
+        for (Map.Entry<String, Integer> entry : CATEGORY_TO_ID.entrySet())
+            if (entry.getValue() == id)
+                // Found it
+                return entry.getKey();
+        // Not found
         return null;
     }
 
-    @Override
-    public String toString() {
-        return name;
+    /**
+     * Find all subcategory of the given category
+     * @param categoryName
+     * @return
+     */
+    public static List<String> allSubCategories(String categoryName) {
+        return CATEGORY_TO_SUBCATEGORY.get(categoryName);
+    }
+
+    /**
+     * List all available categories
+     * @return
+     */
+    public static List<String> allCategories() {
+        return new ArrayList<String>(CATEGORY_TO_ID.keySet());
     }
 }
