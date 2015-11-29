@@ -3,8 +3,6 @@ package wham.operation;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
@@ -14,7 +12,12 @@ import wham.model.UserpreferencePK;
 
 public class PreferenceOperation {
 
-    EntityManagerFactory factory = Persistence.createEntityManagerFactory("WHAM");
+
+    private EntityManager em;
+
+    public PreferenceOperation(EntityManager em) {
+        this.em = em;
+    }
 
     /**
      * Add preferences for user
@@ -22,7 +25,6 @@ public class PreferenceOperation {
      * @param subcategories
      */
     public void createPreference(String email, List<Integer> subcategories) {
-        EntityManager em = factory.createEntityManager();
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.emailId = :email", User.class);
         User user = query.setParameter("email", email).getSingleResult();
         em.getTransaction().begin();
@@ -55,7 +57,6 @@ public class PreferenceOperation {
      * @return
      */
     public boolean deletePreference(String email) {
-        EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
         Query query = em.createQuery("DELETE FROM Userpreference p WHERE p.user.emailId = :email");
         int deletedCount = query.setParameter("email", email).executeUpdate();
@@ -70,7 +71,6 @@ public class PreferenceOperation {
      * @return
      */
     public List<Integer> getSubCategory(String email) {
-        EntityManager em = factory.createEntityManager();
         TypedQuery<Integer> query = em.createQuery(
                 "SELECT p.id.subCategoryId FROM Userpreference p WHERE p.user.emailId = :email",
                 Integer.class);

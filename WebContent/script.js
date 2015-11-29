@@ -168,7 +168,7 @@ whamApp.controller('advancedSearchController', function($http, $scope,
 	var address = String($base64.decode($routeParams.city));
 	var req = {
 		method : 'GET',
-		url : '/WHAM/api/search',
+		url : '/WHAM/api/event/search',
 		headers : {
 			category : category,
 			address : address
@@ -217,7 +217,7 @@ whamApp.controller('basicSearchController', function($scope, $rootScope, $http,
 
 		var req = {
 			method : 'GET',
-			url : '/WHAM/api/search',
+			url : '/WHAM/api/event/search',
 			headers : {
 				latitude : $scope.currentLatitude,
 				longitude : $scope.currentLongitude,
@@ -312,7 +312,7 @@ whamApp.controller('landingController', function($scope, $http, $rootScope,
 			$scope.currentLongitude = position.coords.longitude;
 			var req = {
 				method : 'GET',
-				url : '/WHAM/api/search',
+				url : '/WHAM/api/event/search',
 				headers : {
 					latitude : $scope.currentLatitude,
 					longitude : $scope.currentLongitude,

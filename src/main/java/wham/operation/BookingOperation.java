@@ -3,8 +3,6 @@ package wham.operation;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import wham.model.Booking;
@@ -14,7 +12,11 @@ import wham.model.User;
 
 public class BookingOperation {
 
-    EntityManagerFactory factory = Persistence.createEntityManagerFactory("WHAM");
+    private EntityManager em;
+
+    public BookingOperation(EntityManager em) {
+        this.em = em;
+    }
 
     /**
      * Book an event
@@ -22,7 +24,6 @@ public class BookingOperation {
      * @param eventID
      */
     public void save(String email, String eventId) {
-        EntityManager em = factory.createEntityManager();
         // Find user object
         TypedQuery<User> query1 = em.createQuery("SELECT u FROM User u WHERE u.emailId = :email", User.class);
         User user = query1.setParameter("email", email).getSingleResult();
@@ -49,7 +50,6 @@ public class BookingOperation {
      * @return
      */
     public List<Event> getAllBookingByUser(String email) {
-        EntityManager em = factory.createEntityManager();
         TypedQuery<Event> query = em.createQuery("SELECT b.event FROM Booking b WHERE b.user.emailId = :email",
                 Event.class);
         List<Event> results = query.setParameter("email", email).getResultList();
@@ -64,7 +64,6 @@ public class BookingOperation {
      * @param text
      */
     public void review(String email, String eventId, String text) {
-        EntityManager em = factory.createEntityManager();
         TypedQuery<Booking> query = em.createQuery(
                 "SELECT b FROM Booking b WHERE b.event.eId = :eventId AND b.user.emailId = :email", Booking.class);
         Booking b = query.setParameter("eventId", eventId).setParameter("email", email).getSingleResult();
@@ -81,7 +80,6 @@ public class BookingOperation {
      * @param rate
      */
     public void rate(String email, String eventId, int rate) {
-        EntityManager em = factory.createEntityManager();
         TypedQuery<Booking> query = em.createQuery(
                 "SELECT b FROM Booking b WHERE b.event.eId = :eventId AND b.user.emailId = :email", Booking.class);
         Booking b = query.setParameter("eventId", eventId).setParameter("email", email).getSingleResult();
@@ -99,7 +97,6 @@ public class BookingOperation {
      * @param dislike
      */
     public void dislike(String email, String eventId, boolean dislike) {
-        EntityManager em = factory.createEntityManager();
         TypedQuery<Booking> query = em.createQuery(
                 "SELECT b FROM Booking b WHERE b.event.eId = :eventId AND b.user.emailId = :email", Booking.class);
         Booking b = query.setParameter("eventId", eventId).setParameter("email", email).getSingleResult();
@@ -118,7 +115,6 @@ public class BookingOperation {
      */
     public int countDislike(String eventId, boolean dislike) {
         int count = 0;
-        EntityManager em = factory.createEntityManager();
         TypedQuery<Booking> query = em.createQuery("SELECT b FROM Booking b WHERE b.event.eId = :eventId",
                 Booking.class);
         List<Booking> results = query.setParameter("eventId", eventId).getResultList();
@@ -135,7 +131,6 @@ public class BookingOperation {
      * @return
      */
     public double averageRate(String eventId) {
-        EntityManager em = factory.createEntityManager();
         TypedQuery<Double> query = em.createQuery(
                 "SELECT AVG(b.rating) FROM Booking b WHERE b.event.eId = :eventId AND b.rating != 0", Double.class);
         double average = query.setParameter("eventId", eventId).getSingleResult();
@@ -149,7 +144,6 @@ public class BookingOperation {
      * @return
      */
     public List<String> getAllReviewsForEvent(String eventId) {
-        EntityManager em = factory.createEntityManager();
         TypedQuery<String> query = em.createQuery("SELECT b.comment FROM Booking b WHERE b.event.eId = :eventId",
                 String.class);
         List<String> results = query.setParameter("eventId", eventId).getResultList();

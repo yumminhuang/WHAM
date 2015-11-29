@@ -3,22 +3,23 @@ package wham.operation;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import wham.model.User;
 
 public class UserOperation {
 
-    EntityManagerFactory factory = Persistence.createEntityManagerFactory("WHAM");
+    private EntityManager em;
+
+    public UserOperation(EntityManager em) {
+        this.em = em;
+    }
 
     /**
      * Insert new User into database
      * @param user User object
      */
     public void createUser(User user) {
-        EntityManager em = factory.createEntityManager();
         em.getTransaction().begin();
         em.persist(user);
         em.getTransaction().commit();
@@ -32,7 +33,6 @@ public class UserOperation {
      * @return User object if email and password are valid; Otherwise, return null.
      */
     public User getUser(String email, String password) {
-        EntityManager em = factory.createEntityManager();
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.emailId = :email", User.class);
         User user = query.setParameter("email", email).getSingleResult();
         em.close();
@@ -48,7 +48,6 @@ public class UserOperation {
      * @param modifiedAttrs
      */
     public void updateUser(String email, Map<String, String> modifiedAttrs) {
-        EntityManager em = factory.createEntityManager();
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.emailId = :email", User.class);
         User user = query.setParameter("email", email).getSingleResult();
         em.getTransaction().begin();

@@ -9,7 +9,7 @@
       <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
       <init-param>
          <param-name>jersey.config.server.provider.packages</param-name>
-         <param-value>main.java.wham</param-value>
+         <param-value>wham</param-value>
       </init-param>
       <init-param>
          <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
