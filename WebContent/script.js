@@ -1,6 +1,8 @@
 // create the module and name it scotchApp
-var whamApp = angular.module('whamApp', [ 'ngRoute', 'ngMap', 'ui.bootstrap',
-		'angularUtils.directives.dirPagination', 'base64', 'td.easySocialShare' ]);
+var whamApp = angular.module('whamApp',
+		[ 'ngRoute', 'ngMap', 'ui.bootstrap',
+				'angularUtils.directives.dirPagination', 'base64',
+				'td.easySocialShare' ]);
 
 // configure our routes
 whamApp.config(function($routeProvider) {
@@ -91,6 +93,21 @@ whamApp.directive('googleplace', function() {
 	};
 });
 
+whamApp.directive('pwCheck', [function () {
+  return {
+    require: 'ngModel',
+    link: function (scope, elem, attrs, ctrl) {
+      var firstPassword = '#' + attrs.pwCheck;
+      elem.add(firstPassword).on('keyup', function () {
+        scope.$apply(function () {
+          var v = elem.val()===$(firstPassword).val();
+          ctrl.$setValidity('pwmatch', v);
+        });
+      });
+    }
+  }
+}]);
+
 whamApp.factory('userService', function() {
 	var currentUser = null;
 	var users = [ {
@@ -166,6 +183,7 @@ whamApp.controller('advancedSearchController', function($http, $scope,
 	$scope.advancedSearchRecords = [];
 	var category = $base64.decode($routeParams.category);
 	var address = String($base64.decode($routeParams.city));
+	$scope.currentPosition = address;
 	var req = {
 		method : 'GET',
 		url : '/WHAM/api/event/search',
@@ -198,12 +216,6 @@ whamApp.controller('advancedSearchController', function($http, $scope,
 		infowindow.setPosition(center);
 		infowindow.open($scope.objMapa);
 	};
-
-	$scope.fetchEventDetails = function(eventId) {
-		console.log(JSON.stringify(eventId));
-		$window.open('#/eventDetails/' + eventId);
-	}
-
 });
 
 whamApp.controller('basicSearchController', function($scope, $rootScope, $http,
@@ -248,10 +260,6 @@ whamApp.controller('basicSearchController', function($scope, $rootScope, $http,
 		infowindow.setPosition(center);
 		infowindow.open($scope.objMapa);
 	};
-
-	$scope.fetchEventDetails = function(eventId) {
-		$window.open('#/eventDetails/' + eventId, '_blank');
-	}
 });
 
 whamApp.controller('preferencesFormController', function($scope) {
@@ -262,11 +270,34 @@ whamApp.controller('preferencesFormController', function($scope) {
 	};
 });
 
-whamApp.controller('registrationController', function($scope) {
-	$scope.saveUserData = function(isValid) {
-		if (isValid) {
-			alert('valid form');
+whamApp.controller('registrationController', function($scope, $http) {
+	$scope.userForm = {};
+	$scope.saveUserData = function(userForm) {
+	
+		// If form is invalid, return and let AngularJS show validation errors.
+		if (userForm.$invalid) {
+			return;
 		}
+	
+		$http({
+		    method : 'POST',
+		    url : '/WHAM/api/createuser',
+		    data : $.param({
+				fname : $scope.fname,
+				lname : $scope.lname,
+				email : $scope.email,
+				password: $scope.password,
+				phone: $scope.phone,
+				address: $scope.address,
+				city: $scope.city,
+				zipCode: $scope.zipCode
+			}),
+		    headers : {
+		        'Content-Type' : 'application/x-www-form-urlencoded'
+		    }
+		}).success(function (data) {
+		    console.log(' data ');
+		});
 	}
 });
 
