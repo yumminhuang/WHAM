@@ -1,7 +1,10 @@
 package wham.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.json.JSONObject;
 
 
 /**
@@ -83,5 +86,15 @@ public class Booking implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
+	
+	 public JSONObject serialize() {
+		 JSONObject e = new JSONObject();
+		 e.put("comment", comment);
+		 e.put("dislike", dislike);
+		 e.put("rating", rating);
+		 e.put("eId", event.getEId());
+		 e.put("uId", user.getUId());
+		 return e;
+	 }
 
 }

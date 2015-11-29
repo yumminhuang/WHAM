@@ -14,7 +14,7 @@
 							<label class="col-sm-4 control-label">First Name</label>
 							<div class="col-sm-8">
 								<input class="form-control" name="fname" placeholder="Bruce"
-									ng-model="fname" required>
+									ng-model="newUser.fName" required>
 								<p
 									ng-show="userForm.fname.$invalid && !userForm.fname.$pristine"
 									class="help-block">Your first name is required.</p>
@@ -25,7 +25,7 @@
 							<label class="col-sm-4 control-label">Last Name</label>
 							<div class="col-sm-8">
 								<input class="form-control" name="lname" placeholder="Wayne"
-									ng-model="lname" required>
+									ng-model="newUser.lName" required>
 								<p
 									ng-show="userForm.lname.$invalid && !userForm.lname.$pristine"
 									class="help-block">Your last name is required.</p>
@@ -36,7 +36,7 @@
 							<label class="col-sm-4 control-label">Email</label>
 							<div class="col-sm-8">
 								<input class="form-control" name="email" type="email"
-									placeholder="Email" ng-model="email" required>
+									placeholder="Email" ng-model="newUser.emailId" required>
 								<p
 									ng-show="userForm.email.$invalid && !userForm.email.$pristine"
 									class="help-block">Your email is required.</p>
@@ -47,7 +47,7 @@
 							<div class="col-sm-8">
 								<input type="password" class="form-control" id="inputPassword3"
 									name="inputPassword3" placeholder="Password"
-									ng-model="formInfo.Password">
+									ng-model="newUser.password">
 							</div>
 						</div>
 						<div class="form-group">
@@ -56,9 +56,8 @@
 							<div class="col-sm-8">
 								<input type="password" class="form-control" id="inputPassword4"
 									name="inputPassword4" placeholder="Confirm Password"
-									ng-model="formInfo.confirmPassword" pw-check="inputPassword3">
-									<p
-									ng-show="userForm.inputPassword4.$error.pwmatch"
+									ng-model="newUser.confirmPassword" pw-check="inputPassword3">
+									<p ng-show="userForm.inputPassword4.$error.pwmatch"
 									class="help-block">Passwords don't match.</p>
 							</div>
 						</div>
@@ -67,7 +66,7 @@
 							<label class="col-sm-4 control-label">Phone</label>
 							<div class="col-sm-8">
 								<input class="form-control" name="phone"
-									placeholder="xxx xxx xxxx" ng-model="phone" required>
+									placeholder="xxx xxx xxxx" ng-model="newUser.phone" required>
 								<p
 									ng-show="userForm.phone.$invalid && !userForm.phone.$pristine"
 									class="help-block">Your phone is required.</p>
@@ -78,7 +77,7 @@
 							<label class="col-sm-4 control-label">Address</label>
 							<div class="col-sm-8">
 								<input class="form-control" name="address"
-									placeholder="1007 Mountain Drive" ng-model="address" required>
+									placeholder="1007 Mountain Drive" ng-model="newUser.address" required>
 								<p
 									ng-show="userForm.address.$invalid && !userForm.address.$pristine"
 									class="help-block">Your address is required.</p>
@@ -89,7 +88,7 @@
 							<label class="col-sm-4 control-label">City</label>
 							<div class="col-sm-8">
 								<input class="form-control" name="city" placeholder="Gotham"
-									ng-model="city" required>
+									ng-model="newUser.city" required>
 								<p ng-show="userForm.city.$invalid && !userForm.city.$pristine"
 									class="help-block">Your city is required.</p>
 							</div>
@@ -99,7 +98,7 @@
 							<label class="col-sm-4 control-label">Zip Code</label>
 							<div class="col-sm-8">
 								<input class="form-control" name="zipCode" placeholder="212"
-									ng-model="zipCode" required>
+									ng-model="newUser.zipCode" required>
 								<p
 									ng-show="userForm.zipCode.$invalid && !userForm.zipCode.$pristine"
 									class="help-block">Your zip code is required.</p>

@@ -5,7 +5,7 @@ var whamApp = angular.module('whamApp',
 				'td.easySocialShare' ]);
 
 // configure our routes
-whamApp.config(function($routeProvider) {
+whamApp.config(function($routeProvider, $httpProvider) {
 
 	$routeProvider
 
@@ -70,6 +70,18 @@ whamApp.config(function($routeProvider) {
 	.otherwise({
 		redirectTo : '/'
 	});
+	
+	$httpProvider.interceptors.push('authInterceptor');
+});
+
+whamApp.run(function ($rootScope, userService){
+	userService
+		.getCurrentUser()
+		.then(function (data){
+			$rootScope.currentUser = data;
+		}, function (error){
+			$rootScope.currentUser = null;
+		});
 });
 
 whamApp.directive('googleplace', function() {
@@ -108,35 +120,70 @@ whamApp.directive('pwCheck', [function () {
   }
 }]);
 
-whamApp.factory('userService', function() {
-	var currentUser = null;
-	var users = [ {
-		email : "jason@bourne.com",
-		password : "identity"
-	}, {
-		email : "bruce@wayne.com",
-		password : "gotham"
-	} ];
-
-	var login = function(email, password) {
-
-		for ( var i in users) {
-			if (users[i].email === email && users[i].password === password) {
-				currentUser = users[i];
-				return users[i];
-			}
+whamApp.factory('authInterceptor', function (){
+	function handleRequest (config) {
+		var token = localStorage.getItem('WHAM_AUTH_TOKEN');
+		
+		if(token && isApiRequest (config.url)) {
+			config.headers = config.headers || {};
+			config.headers.Authorization = getBasicToken(token);
 		}
-
-		return null;
+		return config;
 	}
-
-	var getCurrentUser = function() {
-		return currentUser;
+	
+	function isApiRequest (path) {
+		return path.indexOf('/WHAM/api') == 0;
 	}
+	
+	function getBasicToken (token) {
+		return "Bearer " + token;
+	}
+	
+	return {
+		request: handleRequest
+	};
+});
+
+whamApp.factory('userService', function($q, $http, $base64) {
+	
+	var login = function (email, password) {
+		var defer = $q.defer();
+		
+		var token = $base64.encode(email + ':' + password);
+		localStorage.setItem("WHAM_AUTH_TOKEN", token);
+		
+		$http
+			.get('/WHAM/api/users/current')
+			.then(function (resp){
+				console.log(resp.data);
+				defer.resolve(resp.data);
+			}, function (error){
+				localStorage.removeItem("WHAM_AUTH_TOKEN");
+				console.log(error);
+				defer.reject(error);
+			});
+		
+		return defer.promise;
+	};
 
 	var logout = function() {
-		currentUser = null;
-	}
+		localStorage.removeItem("WHAM_AUTH_TOKEN");
+	};
+	
+	var getCurrentUser = function () {
+		var defer = $q.defer();
+		$http
+			.get('/WHAM/api/users/current')
+			.then(function (resp){
+				console.log(resp.data);
+				defer.resolve(resp.data);
+			}, function (error){
+				console.log(error);
+				defer.reject(error);
+			});
+		
+		return defer.promise;
+	};
 
 	return {
 		login : login,
@@ -150,10 +197,14 @@ whamApp.controller('loginController', function($scope, $rootScope, userService,
 	$scope.login = function() {
 		var email = $scope.email;
 		var password = $scope.password;
-		$rootScope.currentUser = userService.login(email, password);
-		if ($rootScope.currentUser) {
-			$location.path('/');
-		}
+		userService
+			.login(email, password)
+			.then(function (data){
+				$rootScope.currentUser = data;
+				$location.path('/');
+			}, function (error){
+				alert('Invalid Login');
+			});
 	};
 });
 
@@ -281,17 +332,8 @@ whamApp.controller('registrationController', function($scope, $http) {
 	
 		$http({
 		    method : 'POST',
-		    url : '/WHAM/api/createuser',
-		    data : $.param({
-				fname : $scope.fname,
-				lname : $scope.lname,
-				email : $scope.email,
-				password: $scope.password,
-				phone: $scope.phone,
-				address: $scope.address,
-				city: $scope.city,
-				zipCode: $scope.zipCode
-			}),
+		    url : '/WHAM/api/users',
+		    data : $.param($scope.newUser),
 		    headers : {
 		        'Content-Type' : 'application/x-www-form-urlencoded'
 		    }

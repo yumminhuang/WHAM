@@ -5,14 +5,15 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import wham.config.AppEntityManager;
 import wham.model.Event;
 
 public class EventOperation {
 
     private EntityManager em;
 
-    public EventOperation(EntityManager em) {
-        this.em = em;
+    public EventOperation() {
+        this.em = AppEntityManager.createEntityManager();
     }
 
     /**

@@ -5,14 +5,15 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import wham.config.AppEntityManager;
 import wham.model.User;
 
 public class UserOperation {
 
     private EntityManager em;
 
-    public UserOperation(EntityManager em) {
-        this.em = em;
+    public UserOperation() {
+    	this.em = AppEntityManager.createEntityManager();
     }
 
     /**
@@ -40,7 +41,7 @@ public class UserOperation {
             return user;
         return null;
     }
-
+    
     /**
      * Update User with the given email id. Put attributes need to be updated in
      * modifiedAttrs

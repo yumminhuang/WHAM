@@ -1,7 +1,10 @@
 package wham.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.json.JSONObject;
 
 
 /**
@@ -51,4 +54,11 @@ public class Userpreference implements Serializable {
 		this.user = user;
 	}
 
+	 public JSONObject serialize() {
+		 JSONObject e = new JSONObject();
+		 e.put("subCategoryId", id.getSubCategoryId());
+		 e.put("categoryId", categoryId);
+		 e.put("uId", user.getUId());
+		 return e;
+	 }
 }

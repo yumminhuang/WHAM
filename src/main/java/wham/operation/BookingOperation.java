@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import wham.config.AppEntityManager;
 import wham.model.Booking;
 import wham.model.BookingPK;
 import wham.model.Event;
@@ -14,8 +15,8 @@ public class BookingOperation {
 
     private EntityManager em;
 
-    public BookingOperation(EntityManager em) {
-        this.em = em;
+    public BookingOperation() {
+    	 this.em = AppEntityManager.createEntityManager();
     }
 
     /**

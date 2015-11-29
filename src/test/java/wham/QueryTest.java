@@ -22,11 +22,11 @@ public class QueryTest {
         this.em = emf.createEntityManager();
     }
 
-    @Test
-    public void testGetUserByEmail() {
-        UserOperation operation = new UserOperation(em);
-        User u = operation.getUser("abc@edf.com", "password");
-        assertEquals(2, u.getUId());
-    }
+//    @Test
+//    public void testGetUserByEmail() {
+//        UserOperation operation = new UserOperation(em);
+//        User u = operation.getUser("abc@edf.com", "password");
+//        assertEquals(2, u.getUId());
+//    }
 
 }

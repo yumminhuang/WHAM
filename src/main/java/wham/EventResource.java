@@ -4,33 +4,29 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
 
-import javax.persistence.EntityManager;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 
+import wham.operation.EventOperation;
 import eventbrite.Credentials;
 import eventbrite.EventbriteClient;
 import eventbrite.exception.RequestException;
 import eventbrite.operation.EventRequest;
 import eventbrite.operation.EventsSearchResult;
 import eventbrite.operation.SearchRequest;
-import wham.operation.EventOperation;
 
 @Path("/event")
 public class EventResource extends ResourceBase {
-
-    private EntityManager em;
 
     @GET
     @Path("{id}")
     /**
      * Get Event details by id
      *
-     * @param id
-     *            Event id
+     * @param id Event id
      * @return JSON describe event
      * @throws RequestException
      */
@@ -100,8 +96,7 @@ public class EventResource extends ResourceBase {
     @Path("check/{id}")
     public String checkEventExist(@PathParam("id") String id) {
         try {
-            em = getEntityManager();
-            EventOperation operation = new EventOperation(em);
+            EventOperation operation = new EventOperation();
             return String.valueOf(operation.eventExist(id));
         } catch (Exception e) {
             StringWriter sw = new StringWriter();

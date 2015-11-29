@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import wham.config.AppEntityManager;
 import wham.model.User;
 import wham.model.Userpreference;
 import wham.model.UserpreferencePK;
@@ -15,8 +16,8 @@ public class PreferenceOperation {
 
     private EntityManager em;
 
-    public PreferenceOperation(EntityManager em) {
-        this.em = em;
+    public PreferenceOperation() {
+    	 this.em = AppEntityManager.createEntityManager();
     }
 
     /**

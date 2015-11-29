@@ -1,7 +1,13 @@
 package wham.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.security.Principal;
 import java.util.List;
 
 
@@ -11,7 +17,7 @@ import java.util.List;
 @Entity
 @Table(name="user")
 @NamedQuery(name="User.findAll", query="SELECT u FROM User u")
-public class User implements Serializable {
+public class User implements Principal, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -170,5 +176,36 @@ public class User implements Serializable {
 
 		return userpreference;
 	}
+
+	@Override
+	public String getName() {
+		return fName + " " + lName;
+	}
+	
+    public JSONObject serialize() {
+        JSONObject e = new JSONObject();
+        e.put("uId", uId);
+        e.put("fName", fName);
+        e.put("lName", lName);
+        e.put("address", address);
+        e.put("city", city);
+        e.put("emailId", emailId);
+        e.put("zipCode", zipCode);
+        e.put("phone", phone);
+        e.put("status", status);
+        
+        JSONArray bookingArray = new JSONArray();
+        for(Booking b : bookings){
+        	bookingArray.put(b.serialize());
+        }
+        e.put("bookings", bookingArray);
+        
+        JSONArray prefArray = new JSONArray();
+        for(Userpreference up : userpreferences){
+        	prefArray.put(up.serialize());
+        }
+        e.put("userpreferences", prefArray);
+        return e;
+    }
 
 }
