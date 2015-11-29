@@ -67,6 +67,11 @@ whamApp.config(function($routeProvider, $httpProvider) {
 		controller : 'preferencesFormController'
 	})
 
+	.when('/stuff', {
+		templateUrl : 'pages/stuff.html',
+		controller : 'tabsController'
+	})
+
 	.otherwise({
 		redirectTo : '/'
 	});
@@ -74,14 +79,12 @@ whamApp.config(function($routeProvider, $httpProvider) {
 	$httpProvider.interceptors.push('authInterceptor');
 });
 
-whamApp.run(function ($rootScope, userService){
-	userService
-		.getCurrentUser()
-		.then(function (data){
-			$rootScope.currentUser = data;
-		}, function (error){
-			$rootScope.currentUser = null;
-		});
+whamApp.run(function($rootScope, userService) {
+	userService.getCurrentUser().then(function(data) {
+		$rootScope.currentUser = data;
+	}, function(error) {
+		$rootScope.currentUser = null;
+	});
 });
 
 whamApp.directive('googleplace', function() {
@@ -105,63 +108,75 @@ whamApp.directive('googleplace', function() {
 	};
 });
 
-whamApp.directive('pwCheck', [function () {
-  return {
-    require: 'ngModel',
-    link: function (scope, elem, attrs, ctrl) {
-      var firstPassword = '#' + attrs.pwCheck;
-      elem.add(firstPassword).on('keyup', function () {
-        scope.$apply(function () {
-          var v = elem.val()===$(firstPassword).val();
-          ctrl.$setValidity('pwmatch', v);
-        });
-      });
-    }
-  }
-}]);
+whamApp.directive('pwCheck', [ function() {
+	return {
+		require : 'ngModel',
+		link : function(scope, elem, attrs, ctrl) {
+			var firstPassword = '#' + attrs.pwCheck;
+			elem.add(firstPassword).on('keyup', function() {
+				scope.$apply(function() {
+					var v = elem.val() === $(firstPassword).val();
+					ctrl.$setValidity('pwmatch', v);
+				});
+			});
+		}
+	}
+} ]);
 
-whamApp.factory('authInterceptor', function (){
-	function handleRequest (config) {
+whamApp.directive('checkImage', function($http) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            attrs.$observe('ngSrc', function(ngSrc) {
+                $http.get(ngSrc).success(function(){
+                }).error(function(){
+                    element.attr('src', 'http://www.njstatelib.org/wp-content/uploads/2014/05/events_medium.jpg'); // set'); // set default image
+                });
+            });
+        }
+    };
+});
+
+whamApp.factory('authInterceptor', function() {
+	function handleRequest(config) {
 		var token = localStorage.getItem('WHAM_AUTH_TOKEN');
 
-		if(token && isApiRequest (config.url)) {
+		if (token && isApiRequest(config.url)) {
 			config.headers = config.headers || {};
 			config.headers.Authorization = getBasicToken(token);
 		}
 		return config;
 	}
 
-	function isApiRequest (path) {
+	function isApiRequest(path) {
 		return path.indexOf('/WHAM/api') == 0;
 	}
 
-	function getBasicToken (token) {
+	function getBasicToken(token) {
 		return "Bearer " + token;
 	}
 
 	return {
-		request: handleRequest
+		request : handleRequest
 	};
 });
 
 whamApp.factory('userService', function($q, $http, $base64) {
 
-	var login = function (email, password) {
+	var login = function(email, password) {
 		var defer = $q.defer();
 
 		var token = $base64.encode(email + ':' + password);
 		localStorage.setItem("WHAM_AUTH_TOKEN", token);
 
-		$http
-			.get('/WHAM/api/users/current')
-			.then(function (resp){
-				console.log(resp.data);
-				defer.resolve(resp.data);
-			}, function (error){
-				localStorage.removeItem("WHAM_AUTH_TOKEN");
-				console.log(error);
-				defer.reject(error);
-			});
+		$http.get('/WHAM/api/users/current').then(function(resp) {
+			console.log(resp.data);
+			defer.resolve(resp.data);
+		}, function(error) {
+			localStorage.removeItem("WHAM_AUTH_TOKEN");
+			console.log(error);
+			defer.reject(error);
+		});
 
 		return defer.promise;
 	};
@@ -170,17 +185,15 @@ whamApp.factory('userService', function($q, $http, $base64) {
 		localStorage.removeItem("WHAM_AUTH_TOKEN");
 	};
 
-	var getCurrentUser = function () {
+	var getCurrentUser = function() {
 		var defer = $q.defer();
-		$http
-			.get('/WHAM/api/users/current')
-			.then(function (resp){
-				console.log(resp.data);
-				defer.resolve(resp.data);
-			}, function (error){
-				console.log(error);
-				defer.reject(error);
-			});
+		$http.get('/WHAM/api/users/current').then(function(resp) {
+			console.log(resp.data);
+			defer.resolve(resp.data);
+		}, function(error) {
+			console.log(error);
+			defer.reject(error);
+		});
 
 		return defer.promise;
 	};
@@ -197,14 +210,12 @@ whamApp.controller('loginController', function($scope, $rootScope, userService,
 	$scope.login = function() {
 		var email = $scope.email;
 		var password = $scope.password;
-		userService
-			.login(email, password)
-			.then(function (data){
-				$rootScope.currentUser = data;
-				$location.path('/');
-			}, function (error){
-				alert('Invalid Login');
-			});
+		userService.login(email, password).then(function(data) {
+			$rootScope.currentUser = data;
+			$location.path('/');
+		}, function(error) {
+			alert('Invalid Login');
+		});
 	};
 });
 
@@ -315,37 +326,155 @@ whamApp.controller('basicSearchController', function($scope, $rootScope, $http,
 
 whamApp.controller('preferencesFormController', function($scope) {
 	$scope.formData = {};
-	$scope.v = true;
-	$scope.savePreferences = function(preferences) {
-		alert(preferences);
+
+	$scope.music = [ {
+		name : 'Pop',
+		value : '3007'
+	}, {
+		name : 'Rock',
+		value : '3011'
+	}, {
+		name : 'Metal',
+		value : '3012'
+	}, {
+		name : 'Folk',
+		value : '3013'
+	}, {
+		name : 'Opera',
+		value : '3017'
+	} ];
+	
+	$scope.travel = [ {
+		name : 'Hiking',
+		value : '9001'
+	}, {
+		name : 'Rafting',
+		value : '9002'
+	}, {
+		name : 'Kayaking',
+		value : '9003'
+	}, {
+		name : 'Canoeing',
+		value : '9004'
+	}, {
+		name : 'Climbing',
+		value : '9005'
+	} ];
+	
+	$scope.food = [ {
+		name : 'Beer',
+		value : '10001'
+	}, {
+		name : 'Wine',
+		value : '10002'
+	}, {
+		name : 'Food',
+		value : '10003'
+	}, {
+		name : 'Spirits',
+		value : '10004'
+	}, {
+		name : 'Other',
+		value : '10099'
+	} ];
+	
+	$scope.science = [ {
+		name : 'Medicine',
+		value : '2001'
+	}, {
+		name : 'Biotech',
+		value : '2003'
+	}, {
+		name : 'Mobile',
+		value : '2005'
+	}, {
+		name : 'Robotics',
+		value : '2007'
+	}, {
+		name : 'Science',
+		value : '2002'
+	} ];
+	
+	$scope.holiday = [ {
+		name : 'Easter',
+		value : '16002'
+	}, {
+		name : 'Halloween/Haunt',
+		value : '16004'
+	}, {
+		name : 'Thanksgiving',
+		value : '16005'
+	}, {
+		name : 'Christmas',
+		value : '16006'
+	}, {
+		name : 'Channukah',
+		value : '16007'
+	} ];
+	
+	$scope.selection = [];
+	$scope.toggleSelection = function toggleSelection(subCategoryId) {
+		var idx = $scope.selection.indexOf(subCategoryId);
+		if (idx > -1) {
+			$scope.selection.splice(idx, 1);
+		} else {
+			$scope.selection.push(subCategoryId);
+		}
+	};
+
+	$scope.savePreferences = function() {
+		alert($scope.selection);
 	};
 });
 
-whamApp.controller('registrationController', function($scope, $http) {
-	$scope.userForm = {};
-	$scope.saveUserData = function(userForm) {
+whamApp.controller('registrationController',
+		function($scope, $http, $uibModal) {
+			$scope.userForm = {};
+			$scope.saveUserData = function(userForm) {
 
-		// If form is invalid, return and let AngularJS show validation errors.
-		if (userForm.$invalid) {
-			return;
-		}
+				// If form is invalid, return and let AngularJS show validation
+				// errors.
+				if (userForm.$invalid) {
+					return;
+				}
 
-		$http({
-		    method : 'POST',
-		    url : '/WHAM/api/users',
-		    data : $.param($scope.newUser),
-		    headers : {
-		        'Content-Type' : 'application/x-www-form-urlencoded'
-		    }
-		}).success(function (data) {
-		    console.log(' data ');
+				$http({
+					method : 'POST',
+					url : '/WHAM/api/users',
+					data : $.param($scope.newUser),
+					headers : {
+						'Content-Type' : 'application/x-www-form-urlencoded'
+					}
+				}).success(function(data) {
+					var modalInstance = $uibModal.open({
+						templateUrl : 'pages/loginRedirect.html',
+						controller : loginRedirectController,
+						backdrop : 'static'
+					});
+				}).error(function(error) {
+					var modalInstance = $uibModal.open({
+						templateUrl : 'pages/signUpError.html',
+						controller : loginRedirectController
+					});
+				});
+			}
 		});
+
+var loginRedirectController = function($scope, $uibModalInstance, $location) {
+
+	$scope.goToLogin = function() {
+		$location.path('login');
+		$scope.cancel();
 	}
-});
 
-whamApp.controller('mainController', function($scope, $uibModal) {
+	$scope.ok = function() {
+		$uibModalInstance.close("ok");
+	};
 
-});
+	$scope.cancel = function() {
+		$uibModalInstance.dismiss("cancel");
+	};
+};
 
 whamApp.controller('landingController', function($scope, $http, $rootScope,
 		$location, userService) {
@@ -439,8 +568,25 @@ whamApp.controller('searchController', function($scope, $location, $http,
 
 whamApp.controller('contactController', [ '$scope', function($scope) {
 	$scope.message = 'Contact us! JK. This is just a demo.';
-} ]);
+} ])
 
-whamApp.controller('aboutController', function($scope) {
-	$scope.message = 'Look! I am an about page.';
-});
+whamApp.controller('tabsController', [ '$scope', function($scope) {
+	$scope.tabs = [ {
+		title : 'My Profile',
+		url : 'pages/profile.html'
+	}, {
+		title : 'My Preferences',
+		url : 'pages/preferences.html'
+	} ];
+
+	$scope.currentTab = 'pages/profile.html';
+
+	$scope.onClickTab = function(tab) {
+		$scope.currentTab = tab.url;
+	}
+
+	$scope.isActiveTab = function(tabUrl) {
+		return tabUrl == $scope.currentTab;
+	}
+
+} ]);
