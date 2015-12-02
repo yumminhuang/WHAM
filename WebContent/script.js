@@ -2,7 +2,7 @@
 var whamApp = angular.module('whamApp',
 		[ 'ngRoute', 'ngMap', 'ui.bootstrap',
 				'angularUtils.directives.dirPagination', 'base64',
-				'td.easySocialShare' ]);
+				'td.easySocialShare', 'angularSpinner']);
 
 // configure our routes
 whamApp.config(function($routeProvider, $httpProvider) {
@@ -219,9 +219,25 @@ whamApp.controller('loginController', function($scope, $rootScope, userService,
 	};
 });
 
-whamApp.controller('profileController', function() {
-
+whamApp.controller('profileController', function($scope, userService, $http, $uibModal) {
+	$scope.updateUserData = function(userForm) {
+		var modalInstance = $uibModal.open({
+			templateUrl : 'pages/profileSuccess.html',
+			controller : profileSuccessController
+		});
+	};
 });
+
+var profileSuccessController = function($location, $scope, $uibModalInstance) {
+	$scope.goToHome = function(){
+		$location.path('#');
+		$scope.cancel();
+	}
+	
+	$scope.cancel = function() {
+		$uibModalInstance.dismiss("cancel");
+	};
+};
 
 whamApp.controller('eventDetailsController', function($rootScope, $routeParams,
 		$scope, $http, $location) {
@@ -242,6 +258,7 @@ whamApp.controller('eventDetailsController', function($rootScope, $routeParams,
 
 whamApp.controller('advancedSearchController', function($http, $scope,
 		$rootScope, $routeParams, $location, $base64, $window) {
+	$scope.showSpinner = true;
 	$scope.advancedSearchRecords = [];
 	var category = $base64.decode($routeParams.category);
 	var address = String($base64.decode($routeParams.city));
@@ -259,6 +276,10 @@ whamApp.controller('advancedSearchController', function($http, $scope,
 		$scope.pageSize = 10;
 		$scope.searchedCity = address;
 		$scope.advancedSearchRecords = response.data.records;
+		$scope.showSpinner = false;
+		if($scope.advancedSearchRecords.length == 0) {
+			$scope.noResults = true;
+		}
 	});
 
 	$scope.$on('mapInitialized', function(event, map) {
@@ -282,7 +303,7 @@ whamApp.controller('advancedSearchController', function($http, $scope,
 
 whamApp.controller('basicSearchController', function($scope, $rootScope, $http,
 		$location, $routeParams, $base64, $compile, $parse, $window) {
-
+	$scope.showSpinner = true;
 	$scope.query = $base64.decode($routeParams.query);
 	$scope.basicSearchRecords = [];
 	navigator.geolocation.getCurrentPosition(function(position) {
@@ -302,6 +323,10 @@ whamApp.controller('basicSearchController', function($scope, $rootScope, $http,
 			$scope.currentPage = 1;
 			$scope.pageSize = 10;
 			$scope.basicSearchRecords = response.data.records;
+			$scope.showSpinner = false;
+			if($scope.basicSearchRecords.length == 0) {
+				$scope.noResults = true;
+			}
 		});
 	});
 
@@ -492,7 +517,7 @@ whamApp.controller('landingController', function($scope, $http, $rootScope,
 		text : 'Seasonal & Holiday'
 	}, {
 		value : '6',
-		text : 'Science & Tech'
+		text : 'Science & Technology'
 	} ];
 
 	$scope.getCurrentUserLocation = function() {
