@@ -18,77 +18,87 @@ import wham.operation.UserOperation;
 
 @Path("/users")
 public class UserResource extends ResourceBase {
-    
+
     @POST
-	public String createNewUser(@FormParam("fName") String fName, @FormParam("lName") String lName, 
-			@FormParam("emailId") String email, @FormParam("password") String password, @FormParam("phone") String phone,
-			@FormParam("address") String address, @FormParam("city") String city, @FormParam("zipCode") String zipCode) {
-		User newUser = new User();
-		newUser.setFName(fName);
-		newUser.setLName(lName);
-		newUser.setEmailId(email);
-		newUser.setPassword(password);
-		newUser.setPassword(password);
-		newUser.setPhone(phone);
-		newUser.setAddress(address);
-		newUser.setCity(city);
-		newUser.setZipCode(zipCode);
-		
-		UserOperation uo = new UserOperation();
-		uo.createUser(newUser);
-		
-		return "success";
-	}
-    
+    public String createNewUser(@FormParam("fName") String fName, @FormParam("lName") String lName,
+            @FormParam("emailId") String email, @FormParam("password") String password,
+            @FormParam("phone") String phone, @FormParam("address") String address, @FormParam("city") String city,
+            @FormParam("zipCode") String zipCode) {
+        User newUser = new User();
+        newUser.setFName(fName);
+        newUser.setLName(lName);
+        newUser.setEmailId(email);
+        newUser.setPassword(password);
+        newUser.setPassword(password);
+        newUser.setPhone(phone);
+        newUser.setAddress(address);
+        newUser.setCity(city);
+        newUser.setZipCode(zipCode);
+
+        UserOperation uo = new UserOperation();
+        uo.createUser(newUser);
+
+        return "success";
+    }
+
     @GET
-	@Path("/current")
+    @Path("/current")
     @RolesAllowed("USER")
-	public String current () {
-    	User user = getCurrentUser();
-		return user.serialize().toString();
-	}
-    
+    public String current() {
+        User user = getCurrentUser();
+        return user.serialize().toString();
+    }
+
+    @GET
+    @Path("/preferences")
+    @RolesAllowed("USER")
+    public List<Integer> getPreferences() {
+        User user = getCurrentUser();
+        PreferenceOperation po = new PreferenceOperation();
+        return po.getSubCategory(user.getEmailId());
+    }
+
     @POST
-   	@Path("/createpreference")
+    @Path("/createpreference")
     @RolesAllowed("USER")
-   	public String createPreference(@FormParam("preference1") String preference1, @FormParam("preference2") String preference2,
-   			@FormParam("preference3") String preference3) {
-   		User user = getCurrentUser();
-    	List<Integer> subcategories = new ArrayList<Integer>();
-    	
-    	subcategories.add(Integer.parseInt(preference1));
-    	subcategories.add(Integer.parseInt(preference2));
-    	subcategories.add(Integer.parseInt(preference3));
-    	
-    	PreferenceOperation po = new PreferenceOperation();
-    	po.createPreference(user.getEmailId(), subcategories);
-   		
-   		return "success";
-   	}
-    
+    public String createPreference(@FormParam("preference1") String preference1,
+            @FormParam("preference2") String preference2, @FormParam("preference3") String preference3) {
+        User user = getCurrentUser();
+        List<Integer> subcategories = new ArrayList<Integer>();
+
+        subcategories.add(Integer.parseInt(preference1));
+        subcategories.add(Integer.parseInt(preference2));
+        subcategories.add(Integer.parseInt(preference3));
+
+        PreferenceOperation po = new PreferenceOperation();
+        po.createPreference(user.getEmailId(), subcategories);
+
+        return "success";
+    }
+
     @PUT
-	@Path("/updateuser")
+    @Path("/updateuser")
     @RolesAllowed("USER")
-	public String updateUser(@FormParam("fname") String fName, @FormParam("lname") String lName, 
-			@FormParam("password") String password, @FormParam("phone") String phone,
-			@FormParam("address") String address, @FormParam("city") String city, @FormParam("zipCode") String zipCode) {
-    	
-    	User user = getCurrentUser();
-    	Map<String, String> modifiedAttrs = new HashMap<String, String>();
-    	
-    	modifiedAttrs.put("address", address);
-    	modifiedAttrs.put("city", city);
-    	modifiedAttrs.put("fName", fName);
-    	modifiedAttrs.put("lName", lName);
-    	modifiedAttrs.put("password", password);
-    	modifiedAttrs.put("phone", phone);
-    	modifiedAttrs.put("zipCode", zipCode);
-    	
-    	
-    	UserOperation uo = new UserOperation();
-		uo.updateUser(user.getEmailId(), modifiedAttrs);
-		
-		return "success";
-   	}
+    public String updateUser(@FormParam("fname") String fName, @FormParam("lname") String lName,
+            @FormParam("password") String password, @FormParam("phone") String phone,
+            @FormParam("address") String address, @FormParam("city") String city,
+            @FormParam("zipCode") String zipCode) {
+
+        User user = getCurrentUser();
+        Map<String, String> modifiedAttrs = new HashMap<String, String>();
+
+        modifiedAttrs.put("address", address);
+        modifiedAttrs.put("city", city);
+        modifiedAttrs.put("fName", fName);
+        modifiedAttrs.put("lName", lName);
+        modifiedAttrs.put("password", password);
+        modifiedAttrs.put("phone", phone);
+        modifiedAttrs.put("zipCode", zipCode);
+
+        UserOperation uo = new UserOperation();
+        uo.updateUser(user.getEmailId(), modifiedAttrs);
+
+        return "success";
+    }
 
 }
