@@ -1,32 +1,29 @@
 package wham;
 
-import static org.junit.Assert.assertEquals;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
-import org.junit.Before;
 import org.junit.Test;
 
+import junit.framework.TestCase;
+import wham.config.AppEntityManager;
 import wham.model.User;
 import wham.operation.UserOperation;
 
-public class QueryTest {
+public class QueryTest extends TestCase {
 
-    private EntityManager em;
-
-    @Before
+    @Override
     public void setUp() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("WHAM");
-        this.em = emf.createEntityManager();
+        AppEntityManager.initEntityManagerFactory();
     }
 
-//    @Test
-//    public void testGetUserByEmail() {
-//        UserOperation operation = new UserOperation(em);
-//        User u = operation.getUser("abc@edf.com", "password");
-//        assertEquals(2, u.getUId());
-//    }
+    @Test
+    public void testGetUserByEmail() {
+        UserOperation operation = new UserOperation();
+        User u = operation.getUser("abc@edf.com", "password");
+        assertEquals(2, u.getUId());
+    }
+
+    @Override
+    public void tearDown() {
+        AppEntityManager.closeEntityManagerFactory();
+    }
 
 }
