@@ -1,0 +1,24 @@
+<!-- <div class="container">
+	<div id="tabs" ng-controller="tabsController" class="stufftabs">
+		<ul style="list-style: none; padding: 0; margin: 0;">
+			<li
+				style="float: left; border: 1px solid #000; border-bottom-width: 0; margin: 3px 3px 0px 3px; padding: 5px 5px 0px 5px; background-color: #CCC; color: #696969;"
+				ng-repeat="tab in tabs" ng-class="{active:isActiveTab(tab.url)}"
+				ng-click="onClickTab(tab)">{{tab.title}}</li>
+		</ul>
+		<div id="mainView"
+			style="border: 1px solid black; clear: both; padding: 0 1em;">
+			<div ng-include="currentTab"></div>
+		</div>
+	</div>
+</div> -->
+
+<div class="container">
+	<div class="row" ng-controller="tabsController">
+	<uib-tabset justified="true">
+    <uib-tab ng-repeat="tab in tabs" heading="{{tab.title}}" active="tab.active" disable="tab.disabled">
+       <div ng-include="tab.url"></div>
+    </uib-tab>
+  </uib-tabset>
+	</div>
+</div>

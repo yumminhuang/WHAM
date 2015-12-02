@@ -1,5 +1,7 @@
 package wham;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URISyntaxException;
 
 import javax.ws.rs.GET;
@@ -8,6 +10,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 
+import wham.operation.EventOperation;
 import eventbrite.Credentials;
 import eventbrite.EventbriteClient;
 import eventbrite.exception.RequestException;
@@ -15,13 +18,14 @@ import eventbrite.operation.EventRequest;
 import eventbrite.operation.EventsSearchResult;
 import eventbrite.operation.SearchRequest;
 
-@Path("/")
-public class WebService {
+@Path("/event")
+public class EventResource extends ResourceBase {
 
     @GET
-    @Path("/event/{id}")
+    @Path("{id}")
     /**
      * Get Event details by id
+     *
      * @param id Event id
      * @return JSON describe event
      * @throws RequestException
@@ -34,10 +38,10 @@ public class WebService {
     }
 
     @GET
-    @Path("/search")
+    @Path("search")
     /**
      * Seach events
-     * @param headers header contains parameters
+     * @param headers  header contains parameters
      * @return JSON describe event list
      * @throws URISyntaxException
      * @throws RequestException
@@ -86,6 +90,19 @@ public class WebService {
         request.setExpand("venue,category,ticket_classes");
         EventsSearchResult events = client.search(request);
         return events.serialize();
+    }
+
+    @GET
+    @Path("check/{id}")
+    public String checkEventExist(@PathParam("id") String id) {
+        try {
+            EventOperation operation = new EventOperation();
+            return String.valueOf(operation.eventExist(id));
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            return sw.toString();
+        }
     }
 
 }
