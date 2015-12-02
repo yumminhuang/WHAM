@@ -17,14 +17,16 @@ public class RequestTest extends TestBase {
 
     @Test
     public void testCategory() {
-        assertEquals(Category.findIdByCategory("Community").getId(), 113);
+        assertEquals(103, Category.getCategoryID("Music"));
+        assertEquals(10003, Category.getCategoryID("Food"));
+        assertEquals("Music", Category.getCategoryName(103));
     }
 
     @Test
     public void testGetEventRequest() throws URISyntaxException, RequestException {
         EventRequest request = new EventRequest();
         request.setId(19104519131l);
-        assertEquals("https://www.eventbriteapi.com/v3/events/19104519131", request.getUri().toString());
+        assertEquals("https://www.eventbriteapi.com/v3/events/19104519131?expand=venue", request.getUri().toString());
     }
 
     @Test
@@ -46,8 +48,15 @@ public class RequestTest extends TestBase {
         SearchRequest request = new SearchRequest();
         request.setKeywords(new String[] { "Rock", "Music" });
         request.setVenue_city("Boston");
-        request.setCategories("Music");
-        assertEquals("https://www.eventbriteapi.com/v3/events/search?q=Rock%2BMusic&venue.city=Boston&categories=103",
+        assertEquals("https://www.eventbriteapi.com/v3/events/search?q=Rock%2BMusic&venue.city=Boston",
+                request.getUri().toString());
+    }
+
+    @Test
+    public void testEventSearchRequestWithCategories() throws URISyntaxException, RequestException {
+        SearchRequest request = new SearchRequest();
+        request.setSubCategories(new String[] { "Rock", "Wine" });
+        assertEquals("https://www.eventbriteapi.com/v3/events/search?subcategories=3017%2C10002",
                 request.getUri().toString());
     }
 

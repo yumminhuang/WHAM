@@ -1,3 +1,88 @@
 <div class="container">
-	<h2 class="center">{{currentUser}}</h2>
+	<div class="row">
+		<div class="col-md-offset-3 col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<strong class="">Update Your Profile</strong>
+				</div>
+				<div class="panel-body">
+					<form class="form-horizontal" name="userForm"
+						ng-controller="profileController"
+						ng-submit="updateUserData(userForm)" novalidate>
+						<div class="form-group"
+							ng-class="{ 'has-error' : userForm.fname.$invalid && !userForm.fname.$pristine }">
+							<label class="col-sm-4 control-label">First Name</label>
+							<div class="col-sm-8">
+								<input class="form-control" name="fname" value="{{loggedInUser.fName}}"
+									ng-model="currentUser.fName" required>
+								<p
+									ng-show="userForm.fname.$invalid && !userForm.fname.$pristine"
+									class="help-block">Your first name is required.</p>
+							</div>
+						</div>
+						<div class="form-group"
+							ng-class="{ 'has-error' : userForm.lname.$invalid && !userForm.lname.$pristine }">
+							<label class="col-sm-4 control-label">Last Name</label>
+							<div class="col-sm-8">
+								<input class="form-control" name="lname" placeholder="Wayne"
+									ng-model="currentUser.lName" required>
+								<p
+									ng-show="userForm.lname.$invalid && !userForm.lname.$pristine"
+									class="help-block">Your last name is required.</p>
+							</div>
+						</div>
+						<div class="form-group"
+							ng-class="{ 'has-error' : userForm.phone.$invalid && !userForm.phone.$pristine }">
+							<label class="col-sm-4 control-label">Phone</label>
+							<div class="col-sm-8">
+								<input class="form-control" name="phone"
+									placeholder="xxx xxx xxxx" ng-model="currentUser.phone" required>
+								<p
+									ng-show="userForm.phone.$invalid && !userForm.phone.$pristine"
+									class="help-block">Your phone is required.</p>
+							</div>
+						</div>
+						<div class="form-group"
+							ng-class="{ 'has-error' : userForm.address.$invalid && !userForm.address.$pristine }">
+							<label class="col-sm-4 control-label">Address</label>
+							<div class="col-sm-8">
+								<input class="form-control" name="address"
+									placeholder="1007 Mountain Drive" ng-model="currentUser.address" required>
+								<p
+									ng-show="userForm.address.$invalid && !userForm.address.$pristine"
+									class="help-block">Your address is required.</p>
+							</div>
+						</div>
+						<div class="form-group"
+							ng-class="{ 'has-error' : userForm.city.$invalid && !userForm.city.$pristine }">
+							<label class="col-sm-4 control-label">City</label>
+							<div class="col-sm-8">
+								<input class="form-control" name="city" placeholder="Gotham"
+									ng-model="currentUser.city" required>
+								<p ng-show="userForm.city.$invalid && !userForm.city.$pristine"
+									class="help-block">Your city is required.</p>
+							</div>
+						</div>
+						<div class="form-group"
+							ng-class="{ 'has-error' : userForm.zipCode.$invalid && !userForm.zipCode.$pristine }">
+							<label class="col-sm-4 control-label">Zip Code</label>
+							<div class="col-sm-8">
+								<input class="form-control" name="zipCode" placeholder="212"
+									ng-model="currentUser.zipCode" required>
+								<p
+									ng-show="userForm.zipCode.$invalid && !userForm.zipCode.$pristine"
+									class="help-block">Your zip code is required.</p>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-4 col-sm-8">
+								<button type="submit" class="btn btn-success"
+									ng-disabled="userForm.$invalid || userForm.$pristine || isDisabled">Save Changes</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

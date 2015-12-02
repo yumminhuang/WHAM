@@ -3,6 +3,7 @@ package eventbrite.model;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -30,9 +31,18 @@ public class Event {
 
     /*
      * These two attributes only exist when adding expend in search request
+     * This is a kludge to get all data in one request.
      */
+    private String address_1;
+    private String address_2;
+    private String city;
+    private String region;
+    private String postal_code;
     private Double longitude;
     private Double latitude;
+    private boolean free;
+    private String category;
+
 
     public Event() {
 
@@ -157,13 +167,18 @@ public class Event {
         e.put("end", endTime.toString());
         e.put("capacity", capacity);
         e.put("status", status);
-        e.put("venueID", venueID);
-        e.put("organizerID", organizerID);
         e.put("categoryID", categoryID);
         e.put("subCategoryID", subCategoryID);
         e.put("logoURL", logo_url);
         e.put("longitude", longitude);
         e.put("latitude", latitude);
+        e.put("address_1", address_1);
+        e.put("address_2", address_2);
+        e.put("city", city);
+        e.put("region", region);
+        e.put("postal_code", postal_code);
+        e.put("free", free);
+        e.put("catrgory", category);
         return e;
     }
 
@@ -190,8 +205,28 @@ public class Event {
         if (e.has("logo") && !e.isNull("logo"))
             this.logo_url = e.getJSONObject("logo").getString("url");
         if (e.has("venue") && !e.isNull("venue")) {
-            this.longitude = e.getJSONObject("venue").getJSONObject("address").getDouble("longitude");
-            this.latitude = e.getJSONObject("venue").getJSONObject("address").getDouble("latitude");
+            JSONObject address = e.getJSONObject("venue").getJSONObject("address");
+            this.longitude = address.getDouble("longitude");
+            this.latitude = address.getDouble("latitude");
+            if (!address.isNull("address_1"))
+                this.address_1 = address.getString("address_1");
+            if (!address.isNull("address_2"))
+                this.address_2 = address.getString("address_2");
+            if (!address.isNull("city"))
+                this.city = address.getString("city");
+            if (!address.isNull("region"))
+                this.region = address.getString("region");
+            if (!address.isNull("postal_code"))
+                this.postal_code = address.getString("postal_code");
+        }
+        if (e.has("category") && !e.isNull("category"))
+            this.category = e.getJSONObject("category").getString("short_name");
+        if (e.has("ticket_classes") && !e.isNull("ticket_classes")) {
+            JSONArray ticket_classes = e.getJSONArray("ticket_classes");
+            if (!ticket_classes.isNull(0))
+                this.free = ticket_classes.getJSONObject(0).getBoolean("free");
+            else
+                this.free = true;
         }
         return this;
     }
