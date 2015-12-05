@@ -219,11 +219,23 @@ whamApp.controller('loginController', function($scope, $rootScope, userService,
 	};
 });
 
-whamApp.controller('profileController', function($scope, userService, $http, $uibModal) {
+whamApp.controller('profileController', function($scope, $rootScope, $http, $uibModal, userService) {
 	$scope.updateUserData = function(userForm) {
-		var modalInstance = $uibModal.open({
-			templateUrl : 'pages/profileSuccess.html',
-			controller : profileSuccessController
+		var nowUser = $rootScope.currentUser;
+		console.log(nowUser);
+		$http({
+			method : 'PUT',
+			url : '/WHAM/api/users/updateuser',
+			data : $.param(nowUser),
+			headers : {
+				'Content-Type' : 'application/x-www-form-urlencoded'
+			}
+		}).success(function(data) {
+			console.log('data....'+data);
+			var modalInstance = $uibModal.open({
+				templateUrl : 'pages/profileSuccess.html',
+				controller : profileSuccessController
+			});
 		});
 	};
 });
@@ -349,7 +361,7 @@ whamApp.controller('basicSearchController', function($scope, $rootScope, $http,
 	};
 });
 
-whamApp.controller('preferencesFormController', function($scope) {
+whamApp.controller('preferencesFormController', function($scope, $http) {
 	$scope.formData = {};
 
 	$scope.music = [ {
@@ -446,9 +458,22 @@ whamApp.controller('preferencesFormController', function($scope) {
 			$scope.selection.push(subCategoryId);
 		}
 	};
-
 	$scope.savePreferences = function() {
-		alert($scope.selection);
+		var data = {
+				preferences: $scope.selection
+		};
+		console.log(JSON.stringify(data));
+		$http({
+			method : 'POST',
+			url : '/WHAM/api/users/createpreference',
+			data : $.param(data)
+		}).success(function(data) {
+			var modalInstance = $uibModal.open({
+				templateUrl : 'pages/loginRedirect.html',
+				controller : loginRedirectController,
+				backdrop : 'static'
+			});
+		});
 	};
 });
 
