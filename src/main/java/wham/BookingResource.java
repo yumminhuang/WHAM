@@ -11,6 +11,7 @@ import javax.ws.rs.PathParam;
 
 import org.json.JSONArray;
 
+import wham.config.MailerComponent;
 import wham.model.Event;
 import wham.model.User;
 import wham.operation.BookingOperation;
@@ -40,6 +41,9 @@ public class BookingResource extends ResourceBase {
             eo.createEvent(e);
         }
         bo.save(user.getEmailId(), id);
+        // TODO: Add a email
+        // MailerComponent.sendMail(user.getEmailId(), "You booked an Event", "");
+
         return "success";
     }
 

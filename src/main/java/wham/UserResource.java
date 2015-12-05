@@ -45,6 +45,9 @@ public class UserResource extends ResourceBase {
         UserOperation uo = new UserOperation();
         uo.createUser(newUser);
 
+        // TODO: Add a email
+        // MailerComponent.sendMail(email, "Welcome to WHAM!", msg);
+
         return "success";
     }
 
