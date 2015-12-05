@@ -14,6 +14,10 @@ import javax.ws.rs.Path;
 
 import org.json.JSONArray;
 
+import eventbrite.Credentials;
+import eventbrite.EventbriteClient;
+import eventbrite.exception.RequestException;
+import eventbrite.operation.EventRequest;
 import wham.model.Event;
 import wham.model.User;
 import wham.operation.BookingOperation;
@@ -68,19 +72,26 @@ public class UserResource extends ResourceBase {
 
     /**
      * Get user's booking history
-     * @return JSON array of booked event ids
+     *
+     * @return JSON array of booked event
+     * @throws RequestException
      */
     @GET
     @Path("/history")
     @RolesAllowed("USER")
-    public String getAllSavedEvents() {
-        JSONArray eIds = new JSONArray();
+    public String getAllSavedEvents() throws RequestException {
+        JSONArray events = new JSONArray();
         User user = getCurrentUser();
         BookingOperation bo = new BookingOperation();
+        // Use Eventbrite API to retrieve data
+        EventbriteClient client = new EventbriteClient(new Credentials());
+        EventRequest request = new EventRequest();
+
         for (Event event : bo.getAllBookingByUser(user.getEmailId())) {
-            eIds.put(event.getEId());
+            request.setId(Long.parseLong(event.getEId()));
+            events.put(client.get(request).extractAttributes());
         }
-        return eIds.toString();
+        return events.toString();
     }
 
     @POST

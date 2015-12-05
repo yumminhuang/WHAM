@@ -11,8 +11,10 @@ import javax.ws.rs.PathParam;
 
 import org.json.JSONArray;
 
+import wham.model.Event;
 import wham.model.User;
 import wham.operation.BookingOperation;
+import wham.operation.EventOperation;
 
 @Path("/book")
 public class BookingResource extends ResourceBase {
@@ -28,6 +30,15 @@ public class BookingResource extends ResourceBase {
     public String save(@FormParam("eId") String id) {
         User user = getCurrentUser();
         BookingOperation bo = new BookingOperation();
+        EventOperation eo = new EventOperation();
+
+        if (!eo.eventExist(id)) {
+            // If event does not exist in Event table, save it
+            Event e = new Event();
+            // We only save Event id now
+            e.setEId(id);
+            eo.createEvent(e);
+        }
         bo.save(user.getEmailId(), id);
         return "success";
     }
