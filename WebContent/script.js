@@ -460,13 +460,16 @@ whamApp.controller('preferencesFormController', function($scope, $http) {
 	};
 	$scope.savePreferences = function() {
 		var data = {
-				preferences: $scope.selection
+				preferences: JSON.stringify($scope.selection)
 		};
 		console.log(JSON.stringify(data));
 		$http({
 			method : 'POST',
 			url : '/WHAM/api/users/createpreference',
-			data : $.param(data)
+			data : $.param(data),
+			headers : {
+				'Content-Type' : 'application/x-www-form-urlencoded'
+			}
 		}).success(function(data) {
 			var modalInstance = $uibModal.open({
 				templateUrl : 'pages/loginRedirect.html',

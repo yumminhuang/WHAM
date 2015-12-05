@@ -13,7 +13,7 @@ public class UserOperation {
     private EntityManager em;
 
     public UserOperation() {
-    	this.em = AppEntityManager.createEntityManager();
+        this.em = AppEntityManager.createEntityManager();
     }
 
     /**
@@ -41,7 +41,7 @@ public class UserOperation {
             return user;
         return null;
     }
-    
+
     /**
      * Update User with the given email id. Put attributes need to be updated in
      * modifiedAttrs
@@ -56,7 +56,7 @@ public class UserOperation {
             if (entry.getKey().equals("address"))
                 user.setAddress(entry.getValue());
             else if (entry.getKey().equals("city"))
-                user.setCity(entry.getKey());
+                user.setCity(entry.getValue());
             else if (entry.getKey().equals("fName"))
                 user.setFName(entry.getValue());
             else if (entry.getKey().equals("lName"))

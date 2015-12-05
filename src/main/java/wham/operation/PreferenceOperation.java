@@ -17,7 +17,7 @@ public class PreferenceOperation {
     private EntityManager em;
 
     public PreferenceOperation() {
-    	 this.em = AppEntityManager.createEntityManager();
+        this.em = AppEntityManager.createEntityManager();
     }
 
     /**
@@ -26,9 +26,13 @@ public class PreferenceOperation {
      * @param subcategories
      */
     public void createPreference(String email, List<Integer> subcategories) {
+        em.getTransaction().begin();
+        Query deleteQuery = em.createQuery("DELETE FROM Userpreference p WHERE p.user.emailId = :email");
+        int deletedCount = deleteQuery.setParameter("email", email).executeUpdate();
+        if (deletedCount > 0)
+            System.out.println("Deleted outdated preferences");
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.emailId = :email", User.class);
         User user = query.setParameter("email", email).getSingleResult();
-        em.getTransaction().begin();
         for(int sub : subcategories) {
             Userpreference pref = new Userpreference();
             UserpreferencePK upk = new UserpreferencePK();
@@ -40,30 +44,6 @@ public class PreferenceOperation {
         }
         em.getTransaction().commit();
         em.close();
-    }
-
-    /**
-     * Update user preferences
-     * @param email
-     * @param subcategories
-     */
-    public void updatePreference(String email, List<Integer> subcategories) {
-        deletePreference(email);
-        createPreference(email, subcategories);
-    }
-
-    /**
-     * Delete all user preferences
-     * @param email
-     * @return
-     */
-    public boolean deletePreference(String email) {
-        em.getTransaction().begin();
-        Query query = em.createQuery("DELETE FROM Userpreference p WHERE p.user.emailId = :email");
-        int deletedCount = query.setParameter("email", email).executeUpdate();
-        em.getTransaction().commit();
-        em.close();
-        return deletedCount > 0;
     }
 
     /**

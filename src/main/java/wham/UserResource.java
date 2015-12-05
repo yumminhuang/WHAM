@@ -112,14 +112,14 @@ public class UserResource extends ResourceBase {
     public String createPreference(@FormParam("preferences") String preferences) {
         User user = getCurrentUser();
         List<Integer> subcategories = new ArrayList<Integer>();
-        System.out.println(preferences);
+
         JSONArray jsonArray = new JSONArray(preferences);
         if (jsonArray != null)
             for (int i = 0, size = jsonArray.length(); i < size; i++)
                 subcategories.add(Integer.parseInt(jsonArray.getString(i)));
 
         PreferenceOperation po = new PreferenceOperation();
-        po.updatePreference(user.getEmailId(), subcategories);
+        po.createPreference(user.getEmailId(), subcategories);
 
         return "success";
     }
@@ -127,12 +127,11 @@ public class UserResource extends ResourceBase {
     @PUT
     @Path("/updateuser")
     @RolesAllowed("USER")
-    public String updateUser(@FormParam("fname") String fName, @FormParam("lname") String lName,
+    public String updateUser(@FormParam("fName") String fName, @FormParam("lName") String lName,
             @FormParam("phone") String phone, @FormParam("address") String address, @FormParam("city") String city,
             @FormParam("zipCode") String zipCode) {
 
         User user = getCurrentUser();
-        System.out.println(user.getEmailId());
         Map<String, String> modifiedAttrs = new HashMap<String, String>();
 
         modifiedAttrs.put("address", address);
@@ -141,7 +140,6 @@ public class UserResource extends ResourceBase {
         modifiedAttrs.put("lName", lName);
         modifiedAttrs.put("phone", phone);
         modifiedAttrs.put("zipCode", zipCode);
-        System.out.println(modifiedAttrs);
 
         UserOperation uo = new UserOperation();
         uo.updateUser(user.getEmailId(), modifiedAttrs);
