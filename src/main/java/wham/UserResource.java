@@ -12,7 +12,11 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
+import org.json.JSONArray;
+
+import wham.model.Event;
 import wham.model.User;
+import wham.operation.BookingOperation;
 import wham.operation.PreferenceOperation;
 import wham.operation.UserOperation;
 
@@ -49,13 +53,35 @@ public class UserResource extends ResourceBase {
         return user.serialize().toString();
     }
 
+    /**
+     * Get user's preferences
+     * @return JSON array of sub-category id
+     */
     @GET
     @Path("/preferences")
     @RolesAllowed("USER")
-    public List<Integer> getPreferences() {
+    public String getPreferences() {
         User user = getCurrentUser();
         PreferenceOperation po = new PreferenceOperation();
-        return po.getSubCategory(user.getEmailId());
+        JSONArray subcategories = new JSONArray(po.getSubCategory(user.getEmailId()));
+        return subcategories.toString();
+    }
+
+    /**
+     * Get user's booking history
+     * @return JSON array of booked event ids
+     */
+    @GET
+    @Path("/history")
+    @RolesAllowed("USER")
+    public String getAllSavedEvents() {
+        JSONArray eIds = new JSONArray();
+        User user = getCurrentUser();
+        BookingOperation bo = new BookingOperation();
+        for (Event event : bo.getAllBookingByUser(user.getEmailId())) {
+            eIds.put(event.getEId());
+        }
+        return eIds.toString();
     }
 
     @POST
