@@ -33,7 +33,6 @@ public class UserResource extends ResourceBase {
         newUser.setLName(lName);
         newUser.setEmailId(email);
         newUser.setPassword(password);
-        newUser.setPassword(password);
         newUser.setPhone(phone);
         newUser.setAddress(address);
         newUser.setCity(city);
@@ -93,7 +92,7 @@ public class UserResource extends ResourceBase {
 
         JSONArray jsonArray = new JSONArray(preferences);
         if (jsonArray != null)
-            for (int i = 0; i < jsonArray.length(); i++)
+            for (int i = 0, size = jsonArray.length(); i < size; i++)
                 subcategories.add(Integer.parseInt(jsonArray.getString(i)));
 
         PreferenceOperation po = new PreferenceOperation();
@@ -106,8 +105,7 @@ public class UserResource extends ResourceBase {
     @Path("/updateuser")
     @RolesAllowed("USER")
     public String updateUser(@FormParam("fname") String fName, @FormParam("lname") String lName,
-            @FormParam("password") String password, @FormParam("phone") String phone,
-            @FormParam("address") String address, @FormParam("city") String city,
+            @FormParam("phone") String phone, @FormParam("address") String address, @FormParam("city") String city,
             @FormParam("zipCode") String zipCode) {
 
         User user = getCurrentUser();
@@ -117,7 +115,6 @@ public class UserResource extends ResourceBase {
         modifiedAttrs.put("city", city);
         modifiedAttrs.put("fName", fName);
         modifiedAttrs.put("lName", lName);
-        modifiedAttrs.put("password", password);
         modifiedAttrs.put("phone", phone);
         modifiedAttrs.put("zipCode", zipCode);
 
