@@ -87,17 +87,17 @@ public class UserResource extends ResourceBase {
     @POST
     @Path("/createpreference")
     @RolesAllowed("USER")
-    public String createPreference(@FormParam("preference1") String preference1,
-            @FormParam("preference2") String preference2, @FormParam("preference3") String preference3) {
+    public String createPreference(@FormParam("preferences") String preferences) {
         User user = getCurrentUser();
         List<Integer> subcategories = new ArrayList<Integer>();
 
-        subcategories.add(Integer.parseInt(preference1));
-        subcategories.add(Integer.parseInt(preference2));
-        subcategories.add(Integer.parseInt(preference3));
+        JSONArray jsonArray = new JSONArray(preferences);
+        if (jsonArray != null)
+            for (int i = 0; i < jsonArray.length(); i++)
+                subcategories.add(Integer.parseInt(jsonArray.getString(i)));
 
         PreferenceOperation po = new PreferenceOperation();
-        po.createPreference(user.getEmailId(), subcategories);
+        po.updatePreference(user.getEmailId(), subcategories);
 
         return "success";
     }
