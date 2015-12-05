@@ -1,5 +1,6 @@
 package wham;
 
+import java.io.StringWriter;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
@@ -9,6 +10,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.json.JSONArray;
 
 import wham.config.MailerComponent;
@@ -41,8 +45,13 @@ public class BookingResource extends ResourceBase {
             eo.createEvent(e);
         }
         bo.save(user.getEmailId(), id);
-        // TODO: Add a email
-        // MailerComponent.sendMail(user.getEmailId(), "You booked an Event", "");
+
+        // Sending email
+        try {
+            MailerComponent.sendMail(user.getEmailId(), "Event booked!", buildBookingEmail(user));
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         return "success";
     }
@@ -103,6 +112,19 @@ public class BookingResource extends ResourceBase {
     public String rate(@PathParam("eId") String id) {
         BookingOperation bo = new BookingOperation();
         return String.valueOf(bo.averageRate(id));
+    }
+
+    private String buildBookingEmail(User user) throws Exception {
+        VelocityEngine ve = new VelocityEngine();
+        ve.init();
+        /* next, get the Template */
+        Template t = ve.getTemplate("./src/main/resources/Booking.vm");
+        VelocityContext context = new VelocityContext();
+        context.put("firstName", user.getFName());
+        /* now render the template into a StringWriter */
+        StringWriter writer = new StringWriter();
+        t.merge(context, writer);
+        return writer.toString();
     }
 
 }

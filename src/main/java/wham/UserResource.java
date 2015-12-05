@@ -1,5 +1,6 @@
 package wham;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,12 +13,16 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
 import org.json.JSONArray;
 
 import eventbrite.Credentials;
 import eventbrite.EventbriteClient;
 import eventbrite.exception.RequestException;
 import eventbrite.operation.EventRequest;
+import wham.config.MailerComponent;
 import wham.model.Event;
 import wham.model.User;
 import wham.operation.BookingOperation;
@@ -45,8 +50,12 @@ public class UserResource extends ResourceBase {
         UserOperation uo = new UserOperation();
         uo.createUser(newUser);
 
-        // TODO: Add a email
-        // MailerComponent.sendMail(email, "Welcome to WHAM!", msg);
+        // Sending email
+        try {
+            MailerComponent.sendMail(email, "Welcome to WHAM!", buildWelcomeEmail(newUser));
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
 
         return "success";
     }
@@ -136,6 +145,19 @@ public class UserResource extends ResourceBase {
         uo.updateUser(user.getEmailId(), modifiedAttrs);
 
         return "success";
+    }
+
+    private String buildWelcomeEmail(User user) throws Exception {
+        VelocityEngine ve = new VelocityEngine();
+        ve.init();
+        /* next, get the Template */
+        Template t = ve.getTemplate("./src/main/resources/Welcome.vm");
+        VelocityContext context = new VelocityContext();
+        context.put("firstName", user.getFName());
+        /* now render the template into a StringWriter */
+        StringWriter writer = new StringWriter();
+        t.merge(context, writer);
+        return writer.toString();
     }
 
 }
