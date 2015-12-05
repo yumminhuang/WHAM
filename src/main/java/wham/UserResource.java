@@ -116,7 +116,7 @@ public class UserResource extends ResourceBase {
         JSONArray jsonArray = new JSONArray(preferences);
         if (jsonArray != null)
             for (int i = 0, size = jsonArray.length(); i < size; i++)
-                subcategories.add(Integer.parseInt(jsonArray.getString(i)));
+                subcategories.add(jsonArray.getInt(i));
 
         PreferenceOperation po = new PreferenceOperation();
         po.createPreference(user.getEmailId(), subcategories);
