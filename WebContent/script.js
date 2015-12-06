@@ -71,6 +71,11 @@ whamApp.config(function($routeProvider, $httpProvider) {
 		templateUrl : 'pages/stuff.html',
 		controller : 'tabsController'
 	})
+	
+	.when('/myEvents', {
+		templateUrl : 'pages/myEvents.html',
+		controller : 'myEventsController'
+	})
 
 	.otherwise({
 		redirectTo : '/'
@@ -170,11 +175,9 @@ whamApp.factory('userService', function($q, $http, $base64) {
 		localStorage.setItem("WHAM_AUTH_TOKEN", token);
 
 		$http.get('/WHAM/api/users/current').then(function(resp) {
-			console.log(resp.data);
 			defer.resolve(resp.data);
 		}, function(error) {
 			localStorage.removeItem("WHAM_AUTH_TOKEN");
-			console.log(error);
 			defer.reject(error);
 		});
 
@@ -188,7 +191,6 @@ whamApp.factory('userService', function($q, $http, $base64) {
 	var getCurrentUser = function() {
 		var defer = $q.defer();
 		$http.get('/WHAM/api/users/current').then(function(resp) {
-			console.log(resp.data);
 			defer.resolve(resp.data);
 		}, function(error) {
 			console.log(error);
@@ -219,10 +221,65 @@ whamApp.controller('loginController', function($scope, $rootScope, userService,
 	};
 });
 
+whamApp.controller('myEventsController', function($scope, $http, $rootScope) {
+	$scope.showSpinner = true;
+	$scope.mySearchRecords = [];
+	$scope.getMyEvents = function() {
+		var req = {
+				method : 'GET',
+				url : '/WHAM/api/users/preferences'
+			};
+			$http(req).then(function(response) {
+				$scope.userpreferences = response.data;
+				navigator.geolocation.getCurrentPosition(function(position) {
+					$scope.currentLatitude = position.coords.latitude;
+					$scope.currentLongitude = position.coords.longitude;
+
+					var req = {
+						method : 'GET',
+						url : '/WHAM/api/event/search',
+						headers : {
+							latitude : $scope.currentLatitude,
+							longitude : $scope.currentLongitude,
+							subcategory : $scope.userpreferences
+						}
+					};
+					$http(req).then(function(response) {
+						$scope.currentPage = 1;
+						$scope.pageSize = 10;
+						$scope.mySearchRecords = response.data.records;
+						$scope.showSpinner = false;
+						if($scope.mySearchRecords.length == 0) {
+							$scope.noResults = true;
+						}
+					});
+				});
+			});
+	};
+	
+	$scope.$on('mapInitialized', function(event, map) {
+		$scope.objMapa = map;
+	});
+
+	$scope.showInfoWindow = function(event, record) {
+		$rootScope.event = record;
+		var infowindow = new google.maps.InfoWindow();
+		var center = new google.maps.LatLng(record.latitude, record.longitude);
+
+		var funcToCall = '<a target="_blank" href="#/eventDetails/' + record.id
+				+ '">' + record.name + '</a>';
+
+		infowindow.setContent(funcToCall);
+
+		infowindow.setPosition(center);
+		infowindow.open($scope.objMapa);
+	};
+	
+});
+
 whamApp.controller('profileController', function($scope, $rootScope, $http, $uibModal, userService) {
 	$scope.updateUserData = function(userForm) {
 		var nowUser = $rootScope.currentUser;
-		console.log(nowUser);
 		$http({
 			method : 'PUT',
 			url : '/WHAM/api/users/updateuser',
@@ -231,7 +288,6 @@ whamApp.controller('profileController', function($scope, $rootScope, $http, $uib
 				'Content-Type' : 'application/x-www-form-urlencoded'
 			}
 		}).success(function(data) {
-			console.log('data....'+data);
 			var modalInstance = $uibModal.open({
 				templateUrl : 'pages/profileSuccess.html',
 				controller : profileSuccessController
@@ -361,95 +417,106 @@ whamApp.controller('basicSearchController', function($scope, $rootScope, $http,
 	};
 });
 
-whamApp.controller('preferencesFormController', function($scope, $http) {
+whamApp.controller('preferencesFormController', function($scope, $http, $uibModal) {
+
 	$scope.formData = {};
 
 	$scope.music = [ {
 		name : 'Pop',
-		value : '3007'
+		value : 3007
 	}, {
 		name : 'Rock',
-		value : '3011'
+		value : 3011
 	}, {
 		name : 'Metal',
-		value : '3012'
+		value : 3012
 	}, {
 		name : 'Folk',
-		value : '3013'
+		value : 3013
 	}, {
 		name : 'Opera',
-		value : '3017'
+		value : 3017
 	} ];
 	
 	$scope.travel = [ {
 		name : 'Hiking',
-		value : '9001'
+		value : 9001
 	}, {
 		name : 'Rafting',
-		value : '9002'
+		value : 9002
 	}, {
 		name : 'Kayaking',
-		value : '9003'
+		value : 9003
 	}, {
 		name : 'Canoeing',
-		value : '9004'
+		value : 9004
 	}, {
 		name : 'Climbing',
-		value : '9005'
+		value : 9005
 	} ];
 	
 	$scope.food = [ {
 		name : 'Beer',
-		value : '10001'
+		value : 10001
 	}, {
 		name : 'Wine',
-		value : '10002'
+		value : 10002
 	}, {
 		name : 'Food',
-		value : '10003'
+		value : 10003
 	}, {
 		name : 'Spirits',
-		value : '10004'
+		value : 10004
 	}, {
 		name : 'Other',
-		value : '10099'
+		value : 10099
 	} ];
 	
 	$scope.science = [ {
 		name : 'Medicine',
-		value : '2001'
+		value : 2001
 	}, {
 		name : 'Biotech',
-		value : '2003'
+		value : 2003
 	}, {
 		name : 'Mobile',
-		value : '2005'
+		value : 2005
 	}, {
 		name : 'Robotics',
-		value : '2007'
+		value : 2007
 	}, {
 		name : 'Science',
-		value : '2002'
+		value : 2002
 	} ];
 	
 	$scope.holiday = [ {
 		name : 'Easter',
-		value : '16002'
+		value : 16002
 	}, {
 		name : 'Halloween/Haunt',
-		value : '16004'
+		value : 16004
 	}, {
 		name : 'Thanksgiving',
-		value : '16005'
+		value : 16005
 	}, {
 		name : 'Christmas',
-		value : '16006'
+		value : 16006
 	}, {
 		name : 'Channukah',
-		value : '16007'
+		value : 16007
 	} ];
 	
 	$scope.selection = [];
+	$scope.getPreferences = function() {
+		var req = {
+				method : 'GET',
+				url : '/WHAM/api/users/preferences'
+			};
+			$http(req).then(function(response) {
+				$scope.selection = response.data;
+			});
+	};
+	
 	$scope.toggleSelection = function toggleSelection(subCategoryId) {
 		var idx = $scope.selection.indexOf(subCategoryId);
 		if (idx > -1) {
@@ -458,11 +525,11 @@ whamApp.controller('preferencesFormController', function($scope, $http) {
 			$scope.selection.push(subCategoryId);
 		}
 	};
+	
 	$scope.savePreferences = function() {
 		var data = {
 				preferences: JSON.stringify($scope.selection)
 		};
-		console.log(JSON.stringify(data));
 		$http({
 			method : 'POST',
 			url : '/WHAM/api/users/createpreference',
@@ -472,13 +539,19 @@ whamApp.controller('preferencesFormController', function($scope, $http) {
 			}
 		}).success(function(data) {
 			var modalInstance = $uibModal.open({
-				templateUrl : 'pages/loginRedirect.html',
-				controller : loginRedirectController,
-				backdrop : 'static'
+				templateUrl : 'pages/preferencesSaved.html',
+				controller : preferencesSavedController
 			});
 		});
 	};
 });
+
+var preferencesSavedController = function($scope, $uibModalInstance, $location) {
+
+};
+
+
+
 
 whamApp.controller('registrationController',
 		function($scope, $http, $uibModal) {
