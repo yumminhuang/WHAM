@@ -1,9 +1,17 @@
-<div class="container" ng-controller="myEventsController" ng-init="getMyEvents()">
+<div class="container" ng-controller="myEventsController"
+	ng-init="getMyEvents()">
 	<div class="row">
-	<div ng-show = 'noResults' class='col-md-6'>
-			<p style="padding: 30px; font-size: x-large;"><i class="fa fa-exclamation-triangle"></i> Sorry, no events found.</p>
+		<div ng-show='noResults' class='col-md-6'>
+			<p style="padding: 30px; font-size: x-large;">
+				<i class="fa fa-exclamation-triangle"></i> Sorry, no events found.
+			</p>
 		</div>
-		<div ng-show = '!noResults' class="col-md-6">
+		<div ng-show='noPreferencesSet' class='col-md-6'>
+			<p style="padding: 30px; font-size: x-large;">
+				<i class="fa fa-exclamation-triangle"></i> You have not set your preferences yet.
+			</p>
+		</div>
+		<div ng-show='!doNotShow' class="col-md-6">
 			<div class="row">
 				<div class="col-md-6">
 					<label for="search">Search:</label> <input ng-model="q" id="search"
@@ -14,30 +22,32 @@
 						min="1" max="10" class="form-control" ng-model="pageSize">
 				</div>
 			</div>
-			<br>
-			<span us-spinner="{radius:30, width:8, length: 16, color:'#428bca'}" spinner-on="showSpinner"></span>
-			<div style="overflow:auto; height:390px;">
-			<ul class="list-group">
-				<li class="list-group-item"
-					dir-paginate="record in mySearchRecords | filter:q | itemsPerPage: pageSize"
-					current-page="currentPage"><a href="#eventDetails/{{record.id}}" target="_blank"><div
-							class="row">
-							<div class="col-md-4">
-								<img style="width: 70%; margin-left: 30px; margin-top: 10px;"
-									alt="{{record.name}}" ng-src={{record.logoURL}} check-image>
-							</div>
-							<div class="col-md-8" style="padding: 10px;">
-								<p>
-									<b>{{record.name}}</b>
-								</p>
-								<p>
-									<i class="fa fa-calendar-times-o"></i>&nbsp;{{record.start |
-									date:'EEE, MMM dd yyyy, hh:mm a'}}
-								</p>
-								<p>Capacity:&nbsp;{{record.capacity}}</p>
-							</div>
-						</div></a></li>
-			</ul>
+			<br> <span
+				us-spinner="{radius:30, width:8, length: 16, color:'#428bca'}"
+				spinner-on="showSpinner"></span>
+			<div style="overflow: auto; height: 390px;">
+				<ul class="list-group">
+					<li class="list-group-item"
+						dir-paginate="record in mySearchRecords | filter:q | itemsPerPage: pageSize"
+						current-page="currentPage"><a
+						href="#eventDetails/{{record.id}}" target="_blank"><div
+								class="row">
+								<div class="col-md-4">
+									<img style="width: 70%; margin-left: 30px; margin-top: 10px;"
+										alt="{{record.name}}" ng-src={{record.logoURL}} check-image>
+								</div>
+								<div class="col-md-8" style="padding: 10px;">
+									<p>
+										<b>{{record.name}}</b>
+									</p>
+									<p>
+										<i class="fa fa-calendar-times-o"></i>&nbsp;{{record.start |
+										date:'EEE, MMM dd yyyy, hh:mm a'}}
+									</p>
+									<p>Capacity:&nbsp;{{record.capacity}}</p>
+								</div>
+							</div></a></li>
+				</ul>
 			</div>
 
 
@@ -47,10 +57,9 @@
 					template-url="pages/dirPagination.tpl.html"></dir-pagination-controls>
 			</div>
 		</div>
-				<div class="col-md-6" style="padding-top: 25px;">
+		<div class="col-md-6" style="padding-top: 25px;">
 			<div>
-				<ng-map style="height: 450px;"
-					center="{{currentPosition}}" zoom="9">
+				<ng-map style="height: 450px;" center="{{currentPosition}}" zoom="13">
 				<marker position="current" animation="Animation.BOUNCE"
 					centered="true"
 					icon="https://upload.wikimedia.org/wikipedia/commons/9/92/Map_marker_icon_%E2%80%93_Nicolas_Mollet_

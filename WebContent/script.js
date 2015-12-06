@@ -231,29 +231,36 @@ whamApp.controller('myEventsController', function($scope, $http, $rootScope) {
 			};
 			$http(req).then(function(response) {
 				$scope.userpreferences = response.data;
-				navigator.geolocation.getCurrentPosition(function(position) {
-					$scope.currentLatitude = position.coords.latitude;
-					$scope.currentLongitude = position.coords.longitude;
+				if($scope.userpreferences.length != 0) {
+					console.log('searching..');
+					navigator.geolocation.getCurrentPosition(function(position) {
+						$scope.currentLatitude = position.coords.latitude;
+						$scope.currentLongitude = position.coords.longitude;
 
-					var req = {
-						method : 'GET',
-						url : '/WHAM/api/event/search',
-						headers : {
-							latitude : $scope.currentLatitude,
-							longitude : $scope.currentLongitude,
-							subcategory : $scope.userpreferences
-						}
-					};
-					$http(req).then(function(response) {
-						$scope.currentPage = 1;
-						$scope.pageSize = 10;
-						$scope.mySearchRecords = response.data.records;
-						$scope.showSpinner = false;
-						if($scope.mySearchRecords.length == 0) {
-							$scope.noResults = true;
-						}
+						var req = {
+							method : 'GET',
+							url : '/WHAM/api/event/search',
+							headers : {
+								latitude : $scope.currentLatitude,
+								longitude : $scope.currentLongitude,
+								subcategory : $scope.userpreferences
+							}
+						};
+						$http(req).then(function(response) {
+							$scope.currentPage = 1;
+							$scope.pageSize = 10;
+							$scope.mySearchRecords = response.data.records;
+							$scope.showSpinner = false;
+							if($scope.mySearchRecords.length == 0) {
+								$scope.noResults = true;
+								$scope.doNotShow = true;
+							}
+						});
 					});
-				});
+				} else {
+					$scope.noPreferencesSet = true;
+					$scope.doNotShow = true;
+				}
 			});
 	};
 	
@@ -322,6 +329,27 @@ whamApp.controller('eventDetailsController', function($rootScope, $routeParams,
 	$http(req).then(function(response) {
 		$scope.event = response.data;
 	});
+	
+	$scope.saveEvent = function() {
+		
+		var data = {
+				eId: eventId
+		};
+		
+		$http({
+			method : 'POST',
+			url : '/WHAM/api/book/save',
+			data : $.param(data),
+			headers : {
+				'Content-Type' : 'application/x-www-form-urlencoded'
+			}
+		}).success(function(data) {
+			var modalInstance = $uibModal.open({
+				templateUrl : 'pages/preferencesSaved.html',
+				controller : preferencesSavedController
+			});
+		});
+	};
 });
 
 whamApp.controller('advancedSearchController', function($http, $scope,
