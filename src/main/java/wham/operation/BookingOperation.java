@@ -5,6 +5,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import org.eclipse.persistence.exceptions.EclipseLinkException;
+
 import wham.config.AppEntityManager;
 import wham.model.Booking;
 import wham.model.BookingPK;
@@ -16,7 +18,7 @@ public class BookingOperation {
     private EntityManager em;
 
     public BookingOperation() {
-    	 this.em = AppEntityManager.createEntityManager();
+        this.em = AppEntityManager.createEntityManager();
     }
 
     /**
@@ -24,7 +26,7 @@ public class BookingOperation {
      * @param email
      * @param eventID
      */
-    public void save(String email, String eventId) {
+    public void save(String email, String eventId) throws Exception {
         // Find user object
         TypedQuery<User> query1 = em.createQuery("SELECT u FROM User u WHERE u.emailId = :email", User.class);
         User user = query1.setParameter("email", email).getSingleResult();
@@ -63,8 +65,9 @@ public class BookingOperation {
      * @param email
      * @param eventId
      * @param text
+     * @throws EclipseLinkException
      */
-    public void review(String email, String eventId, String text) {
+    public void review(String email, String eventId, String text) throws EclipseLinkException {
         TypedQuery<Booking> query = em.createQuery(
                 "SELECT b FROM Booking b WHERE b.event.eId = :eventId AND b.user.emailId = :email", Booking.class);
         Booking b = query.setParameter("eventId", eventId).setParameter("email", email).getSingleResult();
@@ -79,8 +82,9 @@ public class BookingOperation {
      * @param email
      * @param eventId
      * @param rate
+     * @throws EclipseLinkException
      */
-    public void rate(String email, String eventId, int rate) {
+    public void rate(String email, String eventId, int rate) throws EclipseLinkException {
         TypedQuery<Booking> query = em.createQuery(
                 "SELECT b FROM Booking b WHERE b.event.eId = :eventId AND b.user.emailId = :email", Booking.class);
         Booking b = query.setParameter("eventId", eventId).setParameter("email", email).getSingleResult();

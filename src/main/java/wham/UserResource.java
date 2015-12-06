@@ -13,9 +13,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.app.Velocity;
 import org.json.JSONArray;
 
 import eventbrite.Credentials;
@@ -148,16 +147,13 @@ public class UserResource extends ResourceBase {
     }
 
     private String buildWelcomeEmail(User user) throws Exception {
-        VelocityEngine ve = new VelocityEngine();
-        ve.init();
-        /* next, get the Template */
-        Template t = ve.getTemplate("./src/main/resources/Welcome.vm");
         VelocityContext context = new VelocityContext();
         context.put("firstName", user.getFName());
-        /* now render the template into a StringWriter */
-        StringWriter writer = new StringWriter();
-        t.merge(context, writer);
-        return writer.toString();
+        StringWriter out = new StringWriter();
+        String templateStr = "Hello $firstName,\n\nWelcome to WHAM!\n\nRegards,\nWHAM Solver Team";
+        // Merge data and template
+        Velocity.evaluate(context, out, "logging", templateStr);
+        return out.toString();
     }
 
 }

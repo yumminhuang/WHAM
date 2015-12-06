@@ -10,9 +10,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.app.Velocity;
+import org.eclipse.persistence.exceptions.EclipseLinkException;
 import org.json.JSONArray;
 
 import wham.config.MailerComponent;
@@ -44,7 +44,11 @@ public class BookingResource extends ResourceBase {
             e.setEId(id);
             eo.createEvent(e);
         }
-        bo.save(user.getEmailId(), id);
+        try {
+            bo.save(user.getEmailId(), id);
+        } catch (Exception e) {
+            return "Error";
+        }
 
         // Sending email
         try {
@@ -68,7 +72,12 @@ public class BookingResource extends ResourceBase {
     public String review(@FormParam("eId") String id, @FormParam("comment") String comment) {
         User user = getCurrentUser();
         BookingOperation bo = new BookingOperation();
-        bo.review(user.getEmailId(), id, comment);
+        try {
+            bo.review(user.getEmailId(), id, comment);
+        } catch (EclipseLinkException e) {
+            return "You have posted a review for this event.";
+        }
+
         return "success";
     }
 
@@ -98,7 +107,11 @@ public class BookingResource extends ResourceBase {
     public String rate(@FormParam("eId") String id, @FormParam("rate") String rate) {
         User user = getCurrentUser();
         BookingOperation bo = new BookingOperation();
-        bo.rate(user.getEmailId(), id, Integer.parseInt(rate));
+        try {
+            bo.rate(user.getEmailId(), id, Integer.parseInt(rate));
+        } catch (EclipseLinkException e) {
+            return "You have rated this event.";
+        }
         return "success";
     }
 
@@ -115,16 +128,13 @@ public class BookingResource extends ResourceBase {
     }
 
     private String buildBookingEmail(User user) throws Exception {
-        VelocityEngine ve = new VelocityEngine();
-        ve.init();
-        /* next, get the Template */
-        Template t = ve.getTemplate("./src/main/resources/Booking.vm");
         VelocityContext context = new VelocityContext();
         context.put("firstName", user.getFName());
-        /* now render the template into a StringWriter */
-        StringWriter writer = new StringWriter();
-        t.merge(context, writer);
-        return writer.toString();
+        StringWriter out = new StringWriter();
+        String templateStr = "Hello $firstName,\n\nYou just booked an Event.\n\nRegards,\nWHAM Solver Team";
+        // Merge data and template
+        Velocity.evaluate(context, out, "logging", templateStr);
+        return out.toString();
     }
 
 }
