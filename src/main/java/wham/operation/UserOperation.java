@@ -3,6 +3,7 @@ package wham.operation;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 import wham.config.AppEntityManager;
@@ -34,9 +35,16 @@ public class UserOperation {
      * @return User object if email and password are valid; Otherwise, return null.
      */
     public User getUser(String email, String password) {
-        TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.emailId = :email", User.class);
-        User user = query.setParameter("email", email).getSingleResult();
-        em.close();
+        User user;
+        try {
+            TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.emailId = :email", User.class);
+            user = query.setParameter("email", email).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
+
         if (null != user.getPassword() && user.getPassword().equals(password))
             return user;
         return null;

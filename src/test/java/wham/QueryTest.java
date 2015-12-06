@@ -1,6 +1,7 @@
 package wham;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,18 @@ public class QueryTest extends JPATestCase {
         UserOperation operation = new UserOperation();
         User u = operation.getUser("abc@edf.com", "password");
         assertEquals(2, u.getUId());
+    }
+
+    @Test
+    public void testGetUserWithWrongPassword() {
+        UserOperation operation = new UserOperation();
+        assertNull(operation.getUser("abc@edf.com", "wrongpwd"));
+    }
+
+    @Test
+    public void testGetUserWithNonExistEmail() {
+        UserOperation operation = new UserOperation();
+        assertNull(operation.getUser("no@email.com", "wrongpwd"));
     }
 
     @Test
