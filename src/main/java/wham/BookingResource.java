@@ -131,7 +131,8 @@ public class BookingResource extends ResourceBase {
         VelocityContext context = new VelocityContext();
         context.put("firstName", user.getFName());
         StringWriter out = new StringWriter();
-        String templateStr = "Hello $firstName,\n\nYou just booked an Event.\n\nRegards,\nWHAM Solver Team";
+        String templateStr = "Hello $firstName,\n\nYou just booked an Event. "
+                + "Go to History page for more deatiles\n\nRegards,\nWHAM Solver Team";
         // Merge data and template
         Velocity.evaluate(context, out, "logging", templateStr);
         return out.toString();
