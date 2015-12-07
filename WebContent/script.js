@@ -1,8 +1,7 @@
 // create the module and name it scotchApp
-var whamApp = angular.module('whamApp',
-		[ 'ngRoute', 'ngMap', 'ui.bootstrap',
-				'angularUtils.directives.dirPagination', 'base64',
-				'td.easySocialShare', 'angularSpinner']);
+var whamApp = angular.module('whamApp', [ 'ngRoute', 'ngMap', 'ui.bootstrap',
+		'angularUtils.directives.dirPagination', 'base64',
+		'td.easySocialShare', 'angularSpinner']);
 
 // configure our routes
 whamApp.config(function($routeProvider, $httpProvider) {
@@ -71,10 +70,20 @@ whamApp.config(function($routeProvider, $httpProvider) {
 		templateUrl : 'pages/stuff.html',
 		controller : 'tabsController'
 	})
-	
+
 	.when('/myEvents', {
 		templateUrl : 'pages/myEvents.html',
 		controller : 'myEventsController'
+	})
+
+	.when('/history', {
+		templateUrl : 'pages/mySavedEvents.html',
+		controller : 'savedEventsController'
+	})
+
+	.when('/alreadySaved/:eventId', {
+		templateUrl : 'pages/eventDetails.html',
+		controller : 'alreadySavedController'
 	})
 
 	.otherwise({
@@ -128,19 +137,36 @@ whamApp.directive('pwCheck', [ function() {
 	}
 } ]);
 
-whamApp.directive('checkImage', function($http) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-            attrs.$observe('ngSrc', function(ngSrc) {
-                $http.get(ngSrc).success(function(){
-                }).error(function(){
-                    element.attr('src', 'http://www.njstatelib.org/wp-content/uploads/2014/05/events_medium.jpg'); // set'); // set default image
-                });
-            });
-        }
-    };
-});
+whamApp
+		.directive(
+				'checkImage',
+				function($http) {
+					return {
+						restrict : 'A',
+						link : function(scope, element, attrs) {
+							attrs
+									.$observe(
+											'ngSrc',
+											function(ngSrc) {
+												$http
+														.get(ngSrc)
+														.success(function() {
+														})
+														.error(
+																function() {
+																	element
+																			.attr(
+																					'src',
+																					'http://www.njstatelib.org/wp-content/uploads/2014/05/events_medium.jpg'); // set');
+																																								// //
+																																								// set
+																																								// default
+																																								// image
+																});
+											});
+						}
+					};
+				});
 
 whamApp.factory('authInterceptor', function() {
 	function handleRequest(config) {
@@ -226,44 +252,43 @@ whamApp.controller('myEventsController', function($scope, $http, $rootScope) {
 	$scope.mySearchRecords = [];
 	$scope.getMyEvents = function() {
 		var req = {
-				method : 'GET',
-				url : '/WHAM/api/users/preferences'
-			};
-			$http(req).then(function(response) {
-				$scope.userpreferences = response.data;
-				if($scope.userpreferences.length != 0) {
-					console.log('searching..');
-					navigator.geolocation.getCurrentPosition(function(position) {
-						$scope.currentLatitude = position.coords.latitude;
-						$scope.currentLongitude = position.coords.longitude;
+			method : 'GET',
+			url : '/WHAM/api/users/preferences'
+		};
+		$http(req).then(function(response) {
+			$scope.userpreferences = response.data;
+			if ($scope.userpreferences.length != 0) {
+				navigator.geolocation.getCurrentPosition(function(position) {
+					$scope.currentLatitude = position.coords.latitude;
+					$scope.currentLongitude = position.coords.longitude;
 
-						var req = {
-							method : 'GET',
-							url : '/WHAM/api/event/search',
-							headers : {
-								latitude : $scope.currentLatitude,
-								longitude : $scope.currentLongitude,
-								subcategory : $scope.userpreferences
-							}
-						};
-						$http(req).then(function(response) {
-							$scope.currentPage = 1;
-							$scope.pageSize = 10;
-							$scope.mySearchRecords = response.data.records;
-							$scope.showSpinner = false;
-							if($scope.mySearchRecords.length == 0) {
-								$scope.noResults = true;
-								$scope.doNotShow = true;
-							}
-						});
+					var req = {
+						method : 'GET',
+						url : '/WHAM/api/event/search',
+						headers : {
+							latitude : $scope.currentLatitude,
+							longitude : $scope.currentLongitude,
+							subcategory : $scope.userpreferences
+						}
+					};
+					$http(req).then(function(response) {
+						$scope.currentPage = 1;
+						$scope.pageSize = 10;
+						$scope.mySearchRecords = response.data.records;
+						$scope.showSpinner = false;
+						if ($scope.mySearchRecords.length == 0) {
+							$scope.noResults = true;
+							$scope.doNotShow = true;
+						}
 					});
-				} else {
-					$scope.noPreferencesSet = true;
-					$scope.doNotShow = true;
-				}
-			});
+				});
+			} else {
+				$scope.noPreferencesSet = true;
+				$scope.doNotShow = true;
+			}
+		});
 	};
-	
+
 	$scope.$on('mapInitialized', function(event, map) {
 		$scope.objMapa = map;
 	});
@@ -281,10 +306,11 @@ whamApp.controller('myEventsController', function($scope, $http, $rootScope) {
 		infowindow.setPosition(center);
 		infowindow.open($scope.objMapa);
 	};
-	
+
 });
 
-whamApp.controller('profileController', function($scope, $rootScope, $http, $uibModal, userService) {
+whamApp.controller('profileController', function($scope, $rootScope, $http,
+		$uibModal, userService) {
 	$scope.updateUserData = function(userForm) {
 		var nowUser = $rootScope.currentUser;
 		$http({
@@ -304,17 +330,83 @@ whamApp.controller('profileController', function($scope, $rootScope, $http, $uib
 });
 
 var profileSuccessController = function($location, $scope, $uibModalInstance) {
-	$scope.goToHome = function(){
+	$scope.goToHome = function() {
 		$location.path('#');
 		$scope.cancel();
 	}
-	
+
 	$scope.cancel = function() {
 		$uibModalInstance.dismiss("cancel");
 	};
 };
 
 whamApp.controller('eventDetailsController', function($rootScope, $routeParams,
+		$scope, $http, $uibModal) {
+	$scope.event = [];
+	var eventId = $routeParams.eventId;
+	var req = {
+		method : 'GET',
+		url : '/WHAM/api/event/' + eventId,
+		headers : {
+			id : eventId
+		}
+	};
+
+	$http(req).then(function(response) {
+		$scope.event = response.data;
+	});
+
+	$scope.saveEvent = function() {
+
+		var data = {
+			eId : eventId
+		};
+
+		$http({
+			method : 'POST',
+			url : '/WHAM/api/book/save',
+			data : $.param(data),
+			headers : {
+				'Content-Type' : 'application/x-www-form-urlencoded'
+			}
+		}).success(function(data) {
+			$scope.isDisabled = true;
+			var modalInstance = $uibModal.open({
+				templateUrl : 'pages/eventSaved.html',
+				controller : eventSavedController
+			});
+		});
+	};
+	
+	var req = {
+			method : 'GET',
+			url : '/WHAM/api/event/' + eventId,
+			headers : {
+				id : eventId
+			}
+		};
+	
+	$http({
+		method : 'GET',
+		url : '/WHAM/api/book/review/' + eventId
+	}).success(function(data) {
+		$scope.reviewsExist = true;
+		$scope.reviews = data;
+	}).error(function(error) {
+		console.log(error);
+	});
+	
+	
+});
+
+var eventSavedController = function($scope, $uibModalInstance) {
+	$scope.ok = function() {
+		$uibModalInstance.close("ok");
+	};
+};
+
+
+whamApp.controller('alreadySavedController', function($rootScope, $routeParams,
 		$scope, $http, $location) {
 	$scope.event = [];
 	var eventId = $routeParams.eventId;
@@ -329,27 +421,29 @@ whamApp.controller('eventDetailsController', function($rootScope, $routeParams,
 	$http(req).then(function(response) {
 		$scope.event = response.data;
 	});
-	
-	$scope.saveEvent = function() {
-		
-		var data = {
+
+	$scope.btn_add = function() {
+		if ($scope.txtcomment) {
+			var data = {
+				comment: JSON.stringify($scope.txtcomment),
 				eId: eventId
-		};
-		
-		$http({
-			method : 'POST',
-			url : '/WHAM/api/book/save',
-			data : $.param(data),
-			headers : {
-				'Content-Type' : 'application/x-www-form-urlencoded'
-			}
-		}).success(function(data) {
-			var modalInstance = $uibModal.open({
-				templateUrl : 'pages/preferencesSaved.html',
-				controller : preferencesSavedController
+			};
+			
+			console.log(data);
+			
+			$http({
+				method : 'POST',
+				url : '/WHAM/api/book/review',
+				data : $.param(data),
+				headers : {
+					'Content-Type' : 'application/x-www-form-urlencoded'
+				}
+			}).success(function(data) {
+				$scope.isDisabled = true;
 			});
-		});
-	};
+		}
+	}
+
 });
 
 whamApp.controller('advancedSearchController', function($http, $scope,
@@ -373,7 +467,7 @@ whamApp.controller('advancedSearchController', function($http, $scope,
 		$scope.searchedCity = address;
 		$scope.advancedSearchRecords = response.data.records;
 		$scope.showSpinner = false;
-		if($scope.advancedSearchRecords.length == 0) {
+		if ($scope.advancedSearchRecords.length == 0) {
 			$scope.noResults = true;
 		}
 	});
@@ -420,7 +514,7 @@ whamApp.controller('basicSearchController', function($scope, $rootScope, $http,
 			$scope.pageSize = 10;
 			$scope.basicSearchRecords = response.data.records;
 			$scope.showSpinner = false;
-			if($scope.basicSearchRecords.length == 0) {
+			if ($scope.basicSearchRecords.length == 0) {
 				$scope.noResults = true;
 			}
 		});
@@ -445,7 +539,8 @@ whamApp.controller('basicSearchController', function($scope, $rootScope, $http,
 	};
 });
 
-whamApp.controller('preferencesFormController', function($scope, $http, $uibModal) {
+whamApp.controller('preferencesFormController', function($scope, $http,
+		$uibModal) {
 
 	$scope.formData = {};
 
@@ -465,7 +560,7 @@ whamApp.controller('preferencesFormController', function($scope, $http, $uibModa
 		name : 'Opera',
 		value : 3017
 	} ];
-	
+
 	$scope.travel = [ {
 		name : 'Hiking',
 		value : 9001
@@ -482,7 +577,7 @@ whamApp.controller('preferencesFormController', function($scope, $http, $uibModa
 		name : 'Climbing',
 		value : 9005
 	} ];
-	
+
 	$scope.food = [ {
 		name : 'Beer',
 		value : 10001
@@ -499,7 +594,7 @@ whamApp.controller('preferencesFormController', function($scope, $http, $uibModa
 		name : 'Other',
 		value : 10099
 	} ];
-	
+
 	$scope.science = [ {
 		name : 'Medicine',
 		value : 2001
@@ -516,7 +611,7 @@ whamApp.controller('preferencesFormController', function($scope, $http, $uibModa
 		name : 'Science',
 		value : 2002
 	} ];
-	
+
 	$scope.holiday = [ {
 		name : 'Easter',
 		value : 16002
@@ -533,18 +628,18 @@ whamApp.controller('preferencesFormController', function($scope, $http, $uibModa
 		name : 'Channukah',
 		value : 16007
 	} ];
-	
+
 	$scope.selection = [];
 	$scope.getPreferences = function() {
 		var req = {
-				method : 'GET',
-				url : '/WHAM/api/users/preferences'
-			};
-			$http(req).then(function(response) {
-				$scope.selection = response.data;
-			});
+			method : 'GET',
+			url : '/WHAM/api/users/preferences'
+		};
+		$http(req).then(function(response) {
+			$scope.selection = response.data;
+		});
 	};
-	
+
 	$scope.toggleSelection = function toggleSelection(subCategoryId) {
 		var idx = $scope.selection.indexOf(subCategoryId);
 		if (idx > -1) {
@@ -553,10 +648,10 @@ whamApp.controller('preferencesFormController', function($scope, $http, $uibModa
 			$scope.selection.push(subCategoryId);
 		}
 	};
-	
+
 	$scope.savePreferences = function() {
 		var data = {
-				preferences: JSON.stringify($scope.selection)
+			preferences : JSON.stringify($scope.selection)
 		};
 		$http({
 			method : 'POST',
@@ -575,11 +670,10 @@ whamApp.controller('preferencesFormController', function($scope, $http, $uibModa
 });
 
 var preferencesSavedController = function($scope, $uibModalInstance, $location) {
-
+	$scope.ok = function() {
+		$uibModalInstance.close("ok");
+	};
 };
-
-
-
 
 whamApp.controller('registrationController',
 		function($scope, $http, $uibModal) {
@@ -721,8 +815,55 @@ whamApp.controller('searchController', function($scope, $location, $http,
 });
 
 whamApp.controller('contactController', [ '$scope', function($scope) {
-	$scope.message = 'Contact us! JK. This is just a demo.';
-} ])
+
+} ]);
+
+whamApp.controller('savedEventsController',
+		function($scope, $http, $rootScope) {
+
+			$scope.getMySavedEvents = function() {
+				$scope.showSpinner = true;
+				$scope.mySavedEventRecords = [];
+				navigator.geolocation.getCurrentPosition(function(position) {
+					$scope.currentLatitude = position.coords.latitude;
+					$scope.currentLongitude = position.coords.longitude;
+
+					var req = {
+						method : 'GET',
+						url : '/WHAM/api/users/history',
+					};
+
+					$http(req).then(function(response) {
+						$scope.currentPage = 1;
+						$scope.pageSize = 10;
+						$scope.mySavedEventRecords = response.data;
+						$scope.showSpinner = false;
+						if ($scope.mySavedEventRecords.length == 0) {
+							$scope.noResults = true;
+						}
+					});
+				});
+			}
+
+			$scope.$on('mapInitialized', function(event, map) {
+				$scope.objMapa = map;
+			});
+
+			$scope.showInfoWindow = function(event, record) {
+				$rootScope.event = record;
+				var infowindow = new google.maps.InfoWindow();
+				var center = new google.maps.LatLng(record.latitude,
+						record.longitude);
+
+				var funcToCall = '<a target="_blank" href="#/alreadySaved/'
+						+ record.id + '">' + record.name + '</a>';
+
+				infowindow.setContent(funcToCall);
+
+				infowindow.setPosition(center);
+				infowindow.open($scope.objMapa);
+			};
+		});
 
 whamApp.controller('tabsController', [ '$scope', function($scope) {
 	$scope.tabs = [ {

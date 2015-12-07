@@ -42,10 +42,12 @@
 <body ng-controller="landingController" ng-init="showEventsAroundUser()">
 	<nav class="navbar navbar-default">
 		<div class="container">
-			<div class="col-md-6">
-				<div class="input-group search-controls" id="adv-search">
+			<div class="col-md-1"></div>
+			<div class="col-md-4">
+				<div class="input-group search-controls" id="adv-search"
+					style="width: 345px;">
 					<input type="text" class="form-control" ng-model="query"
-						placeholder="Enter Keywords (or click the dropdown for advanced search)" />
+						placeholder="Enter Keywords" />
 					<div class="input-group-btn">
 						<div class="btn-group" role="group">
 							<div class="dropdown dropdown-lg">
@@ -53,7 +55,8 @@
 									data-toggle="dropdown" aria-expanded="false">
 									<span class="caret"></span>
 								</button>
-								<div class="dropdown-menu dropdown-menu-right" role="menu">
+								<div class="dropdown-menu dropdown-menu-right" role="menu"
+									style="min-width: 345px;">
 									<form class="form-horizontal" role="form">
 										<div class="form-group">
 											<label for="filter">Category</label> <select
@@ -81,7 +84,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-7">
 				<ul class="nav navbar-nav navbar-right">
 					<li ng-show="!currentUser"><a href="#login"><i
 							class="fa fa-sign-in"></i> Login</a></li>
@@ -92,6 +95,8 @@
 							class="fa fa-child"></i> My Events</a></li>
 					<li ng-show="currentUser"><a href="#stuff"><i
 							class="fa fa-diamond"></i></i> My Stuff</a></li>
+					<li ng-show="currentUser"><a href="#history"><i
+							class="fa fa-history"></i></i> History</a></li>
 					<li><a href="#contact"><i class="fa fa-comment"></i>
 							Contact</a></li>
 				</ul>

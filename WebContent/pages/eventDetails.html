@@ -5,10 +5,9 @@
 				style="width: 100%; margin-top: 10px; max-width: 250px; max-height: 250px; font-size: small; padding: 5px; border: 1px solid black;"
 				alt="{{event.name}}" ng-src={{event.logoURL}} check-image>
 
-			<button type="button" class="btn btn-success"
-				style="margin-top: 20px;" ng-disabled="isDisabled"
-				ng-click="saveEvent()">
-				<i class="fa fa-star"></i> Save this event
+			<button type="button" class="btn btn-disabled"
+				style="margin-top: 20px;" ng-disabled="true">
+				<i class="fa fa-star"></i> Saved Event
 			</button>
 		</div>
 		<div class="col-md-8" style="padding: 12px;">
@@ -49,14 +48,19 @@
 			</p>
 		</div>
 	</div>
-
 	<div class="row">
-		<h3 style="margin-left: 12px;">Reviews</h3>
-		<table class="table table-striped table-condensed">
-			<tr ng-repeat="review in reviews">
-				<td style="padding:10px;">{{review}}</td>
-			</tr>
-		</table>
+		<div class="comment-box">
+			<div id='dv1'>
+				<form>
+					<textarea ng-model="txtcomment" placeholder="Your Comment"
+						style='width: 70%; margin-left: 15px; margin-top: 20px; margin-bottom: 20px;'></textarea>
+					<div>
+						<button ng-click='btn_add()' ng-disabled="isDisabled"
+							style='margin-left: 14px; margin-bottom: 10px;'>Post
+							Review</button>
+					</div>
+				</form>
+			</div>
+		</div>
 	</div>
-
 </div>
