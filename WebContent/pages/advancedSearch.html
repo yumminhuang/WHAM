@@ -10,12 +10,12 @@
 						class="form-control" placeholder="Filter text">
 				</div>
 				<div class="col-md-6">
-					<label for="search">items per page:</label> <input type="number"
+					<label for="search">Items per page:</label> <input type="number"
 						min="1" max="10" class="form-control" ng-model="pageSize">
 				</div>
 			</div>
 			<br>
-			<span us-spinner="{radius:30, width:8, length: 16, color:'#428bca'}" spinner-on="showSpinner"></span>
+			<span us-spinner="{radius:30, width:8, length: 16, color:'#fff'}" spinner-on="showSpinner"></span>
 			<div style="overflow:auto; height:390px;">
 			<ul class="list-group">
 				<li class="list-group-item"
@@ -48,7 +48,7 @@
 			</div>
 		</div>
 				<div class="col-md-6" style="padding-top: 25px;">
-			<div>
+			<div class="map-view">
 				<ng-map style="height: 450px;"
 					center="{{currentPosition}}" zoom="9">
 				<marker position="current" animation="Animation.BOUNCE"
