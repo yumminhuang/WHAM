@@ -17,6 +17,9 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="styles.css">
+<link href='https://fonts.googleapis.com/css?family=Raleway:400,800,600' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 <script src="http://mymaplist.com/js/vendor/TweenLite.min.js"></script>
 <!-- SPELLS -->
 <script
@@ -41,8 +44,8 @@
 <!-- define angular controller -->
 <body ng-controller="landingController" ng-init="showEventsAroundUser()">
 	<nav class="navbar navbar-default">
-		<div class="container">
-			<div class="col-md-1"></div>
+		<div class="container-fluid">
+			<div class="col-md-2"><span class="app-logo">WHAM</span></div>
 			<div class="col-md-4">
 				<div class="input-group search-controls" id="adv-search"
 					style="width: 345px;">
@@ -84,7 +87,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-7">
+			<div class="col-md-6">
 				<ul class="nav navbar-nav navbar-right">
 					<li ng-show="!currentUser"><a href="#login"><i
 							class="fa fa-sign-in"></i> Login</a></li>

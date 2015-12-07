@@ -180,7 +180,7 @@ whamApp.factory('authInterceptor', function() {
 	}
 
 	function isApiRequest(path) {
-		return path.indexOf('/WHAM/api') == 0;
+		return (path && path.indexOf('/WHAM/api') == 0);
 	}
 
 	function getBasicToken(token) {

@@ -11,9 +11,8 @@
 			</button>
 		</div>
 		<div class="col-md-8" style="padding: 12px;">
-			<p>
-				<b style="font-size: x-large;">{{event.name}}</b>
-			</p>
+			<h2>{{event.name}}
+			</h2>
 			<p style="font-size: large;">
 				<i class="fa fa-calendar-times-o"></i>&nbsp;{{event.start |
 				date:'medium'}}
@@ -24,7 +23,7 @@
 				Capacity:&nbsp;{{event.capacity}}
 			</address>
 
-			<div style="font-size: x-large;" share-square="true"
+			<div style="font-size: x-large;" share-square="false"
 				share-links="Facebook, Twitter, LinkedIn, Google-Plus"
 				share-title="Article Title"></div>
 
@@ -33,7 +32,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-4">
-			<div class="map-view" style="padding-top: 20px;">
+			<div class="map-view"">
 				<map zoom="14" center="[{{currentLatitude}},{{currentLongitude}}]">
 					<directions draggable="true" travel-mode="DRIVING"
 						origin="current-location"
@@ -43,21 +42,18 @@
 			</div>
 		</div>
 		<div class="col-md-8">
-			<p style="padding-top: 20px; font-size: large;">
-				<span style="font-weight: bold;">Description:</span>&nbsp;{{event.description}}
+			<p class="description">
+				<strong>Description: </strong>{{event.description}}
 			</p>
 		</div>
 	</div>
 	<div class="row">
 		<div class="comment-box">
-			<div id='dv1'>
+			<div id="dv1">
 				<form>
-					<textarea ng-model="txtcomment" placeholder="Your Comment"
-						style='width: 70%; margin-left: 15px; margin-top: 20px; margin-bottom: 20px;'></textarea>
+					<textarea style="margin-bottom: 20px;" class="form-control" ng-model="txtcomment" placeholder="Your Comment"></textarea>
 					<div>
-						<button ng-click='btn_add()' ng-disabled="isDisabled"
-							style='margin-left: 14px; margin-bottom: 10px;'>Post
-							Review</button>
+						<button class="btn btn-primary" ng-click='btn_add()' ng-disabled="isDisabled">Post Review</button>
 					</div>
 				</form>
 			</div>
