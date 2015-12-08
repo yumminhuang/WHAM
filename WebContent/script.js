@@ -1,7 +1,7 @@
 // create the module and name it scotchApp
 var whamApp = angular.module('whamApp', [ 'ngRoute', 'ngMap', 'ui.bootstrap',
 		'angularUtils.directives.dirPagination', 'base64',
-		'td.easySocialShare', 'angularSpinner']);
+		'td.easySocialShare', 'angularSpinner' ]);
 
 // configure our routes
 whamApp.config(function($routeProvider, $httpProvider) {
@@ -158,10 +158,10 @@ whamApp
 																			.attr(
 																					'src',
 																					'http://www.njstatelib.org/wp-content/uploads/2014/05/events_medium.jpg'); // set');
-																																								// //
-																																								// set
-																																								// default
-																																								// image
+																	// //
+																	// set
+																	// default
+																	// image
 																});
 											});
 						}
@@ -190,6 +190,25 @@ whamApp.factory('authInterceptor', function() {
 	return {
 		request : handleRequest
 	};
+});
+
+whamApp.directive("passwordStrength", function(){
+    return {        
+        restrict: 'A',
+        link: function(scope, element, attrs){                    
+            scope.$watch(attrs.passwordStrength, function(value) {
+                if(angular.isDefined(value)){
+                    if (value.length > 8) {
+                        scope.strength = 'strong';
+                    } else if (value.length > 3) {
+                        scope.strength = 'medium';
+                    } else {
+                        scope.strength = 'weak';
+                    }
+                }
+            });
+        }
+    };
 });
 
 whamApp.factory('userService', function($q, $http, $base64) {
@@ -234,7 +253,7 @@ whamApp.factory('userService', function($q, $http, $base64) {
 });
 
 whamApp.controller('loginController', function($scope, $rootScope, userService,
-		$location) {
+		$location, $uibModal) {
 	$scope.login = function() {
 		var email = $scope.email;
 		var password = $scope.password;
@@ -242,7 +261,10 @@ whamApp.controller('loginController', function($scope, $rootScope, userService,
 			$rootScope.currentUser = data;
 			$location.path('/');
 		}, function(error) {
-			alert('Invalid Login');
+			var modalInstance = $uibModal.open({
+				templateUrl : 'pages/loginError.html',
+				controller : loginErrorController
+			});
 		});
 	};
 });
@@ -354,6 +376,7 @@ whamApp.controller('eventDetailsController', function($rootScope, $routeParams,
 
 	$http(req).then(function(response) {
 		$scope.event = response.data;
+		console.log(JSON.stringify(response.data));
 	});
 
 	$scope.saveEvent = function() {
@@ -377,26 +400,27 @@ whamApp.controller('eventDetailsController', function($rootScope, $routeParams,
 			});
 		});
 	};
-	
+
 	var req = {
-			method : 'GET',
-			url : '/WHAM/api/event/' + eventId,
-			headers : {
-				id : eventId
-			}
-		};
-	
+		method : 'GET',
+		url : '/WHAM/api/event/' + eventId,
+		headers : {
+			id : eventId
+		}
+	};
+
 	$http({
 		method : 'GET',
 		url : '/WHAM/api/book/review/' + eventId
 	}).success(function(data) {
-		$scope.reviewsExist = true;
 		$scope.reviews = data;
+		if ($scope.reviews.length > 0) {
+			$scope.reviewsExist = true;
+		}
 	}).error(function(error) {
 		console.log(error);
 	});
-	
-	
+
 });
 
 var eventSavedController = function($scope, $uibModalInstance) {
@@ -405,6 +429,17 @@ var eventSavedController = function($scope, $uibModalInstance) {
 	};
 };
 
+var geolocationErrorController = function($scope, $uibModalInstance) {
+	$scope.ok = function() {
+		$uibModalInstance.close("ok");
+	};
+};
+
+var loginErrorController = function($scope, $uibModalInstance) {
+	$scope.ok = function() {
+		$uibModalInstance.close("ok");
+	};
+};
 
 whamApp.controller('alreadySavedController', function($rootScope, $routeParams,
 		$scope, $http, $location) {
@@ -425,12 +460,12 @@ whamApp.controller('alreadySavedController', function($rootScope, $routeParams,
 	$scope.btn_add = function() {
 		if ($scope.txtcomment) {
 			var data = {
-				comment: JSON.stringify($scope.txtcomment),
-				eId: eventId
+				comment : JSON.stringify($scope.txtcomment),
+				eId : eventId
 			};
-			
+
 			console.log(data);
-			
+
 			$http({
 				method : 'POST',
 				url : '/WHAM/api/book/review',
@@ -725,7 +760,7 @@ var loginRedirectController = function($scope, $uibModalInstance, $location) {
 };
 
 whamApp.controller('landingController', function($scope, $http, $rootScope,
-		$location, userService) {
+		$location, userService, $uibModal) {
 	$scope.categories = [ {
 		value : '1',
 		text : 'Music'
@@ -743,12 +778,37 @@ whamApp.controller('landingController', function($scope, $http, $rootScope,
 		text : 'Science & Technology'
 	} ];
 
-	$scope.getCurrentUserLocation = function() {
-		navigator.geolocation.getCurrentPosition(function(position) {
-			$rootScope.currentLatitude = position.coords.latitude;
-			$rootScope.currentLongitude = position.coords.longitude;
-		});
-	};
+    function showLocation(position) {
+        $rootScope.latitude = position.coords.latitude;
+        $rootScope.longitude = position.coords.longitude;
+     }
+
+     function errorHandler(err) {
+        if(err.code == 1) {
+        	var modalInstance = $uibModal.open({
+				templateUrl : 'pages/geolocationError.html',
+				controller: geolocationErrorController
+        	});
+        }
+        
+        else if( err.code == 2) {
+           alert("Error: Position is unavailable!");
+        }
+     }
+		
+     $scope.getCurrentPosition = function(){
+
+        if(navigator.geolocation){
+           // timeout at 60000 milliseconds (60 seconds)
+           var options = {timeout:60000};
+           navigator.geolocation.getCurrentPosition(showLocation, errorHandler, options);
+        }
+        
+        else{
+           alert("Sorry, browser does not support geolocation!");
+        }
+     }
+
 
 	$scope.logout = function() {
 		$rootScope.currentUser = null;
