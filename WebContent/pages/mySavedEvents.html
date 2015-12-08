@@ -1,6 +1,6 @@
-<div class="container">
+<div class="container" ng-controller="savedEventsController" ng-init="getMySavedEvents()">
 	<div class="row">
-	<div ng-show = 'noResults' class='col-md-6'>
+		<div ng-show = 'noResults' class='col-md-6'>
 			<p style="padding: 30px; font-size: x-large;"><i class="fa fa-exclamation-triangle"></i> Sorry, no events found.</p>
 		</div>
 		<div ng-show = '!noResults' class="col-md-6">
@@ -10,7 +10,7 @@
 						class="form-control" placeholder="Filter text">
 				</div>
 				<div class="col-md-6">
-					<label for="search">Items per page:</label> <input type="number"
+					<label for="search">items per page:</label> <input type="number"
 						min="1" max="10" class="form-control" ng-model="pageSize">
 				</div>
 			</div>
@@ -19,8 +19,8 @@
 			<div style="overflow:auto; height:390px;">
 			<ul class="list-group">
 				<li class="list-group-item"
-					dir-paginate="record in advancedSearchRecords | filter:q | itemsPerPage: pageSize"
-					current-page="currentPage"><a href="#eventDetails/{{record.id}}" target="_blank"><div
+					dir-paginate="record in mySavedEventRecords | filter:q | itemsPerPage: pageSize"
+					current-page="currentPage"><a href="#alreadySaved/{{record.id}}" target="_blank"><div
 							class="row">
 							<div class="col-md-4">
 								<img style="width: 70%; margin-left: 30px; margin-top: 10px;"
@@ -47,16 +47,16 @@
 					template-url="pages/dirPagination.tpl.html"></dir-pagination-controls>
 			</div>
 		</div>
-				<div class="col-md-6" style="padding-top: 25px;">
+		<div class="col-md-6" style="padding-top: 25px;">
 			<div class="map-view">
 				<ng-map style="height: 450px;"
-					center="{{currentPosition}}" zoom="9">
+					center="[{{currentLatitude}},{{currentLongitude}}]" zoom="12">
 				<marker position="current" animation="Animation.BOUNCE"
 					centered="true"
 					icon="https://upload.wikimedia.org/wikipedia/commons/9/92/Map_marker_icon_%E2%80%93_Nicolas_Mollet_
 					%E2%80%93_Home_%E2%80%93_People_%E2%80%93_Default.png">
 				</marker> <marker position="{{record.latitude}}, {{record.longitude}}"
-					ng-repeat="record in advancedSearchRecords"
+					ng-repeat="record in mySavedEventRecords"
 					on-click="showInfoWindow(record)"> </marker></ng-map>
 			</div>
 		</div>

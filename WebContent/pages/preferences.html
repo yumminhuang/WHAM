@@ -1,68 +1,57 @@
 <div class="container">
-	<div ng-controller="preferencesFormController">
+	<div ng-controller="preferencesFormController"
+		ng-init="getPreferences()">
 		<div class="col-xs-12 col-sm-10 col-sm-offset-1">
 
 			<h2>Select your preferred events!</h2>
 
-			<form>
+			<form class="larger-form">
 				<label>Music</label>
 				<div class="form-group">
-					<span ng-repeat="m in music"> <label class="checkbox-inline">
-							<input type="checkbox" value="{{m.value}}"
-							ng-checked="selection.indexOf(m.value) > -1"
-							ng-click="toggleSelection(m.value)" /> {{m.name}}
-					</label>
+					<span ng-repeat="m in music"> 
+						<label class="checkbox-inline" ng-click="toggleSelection(m.value)">
+							<i ng-class="{true: 'fa fa-check-square-o', false: 'fa fa-square-o'}[selection.indexOf(m.value) > -1]"></i> {{m.name}}
+						</label>
 					</span>
 				</div>
 
-				<label>Travel & Outdoor</label>
+				<label>Travel &amp; Outdoor</label>
 				<div class="form-group">
-					<span ng-repeat="t in travel"> <label
-						class="checkbox-inline"> <input type="checkbox"
-							value="{{t.value}}" ng-checked="selection.indexOf(t.value) > -1"
-							ng-click="toggleSelection(t.value)" /> {{t.name}}
-					</label>
+					<span ng-repeat="t in travel"> 
+						<label class="checkbox-inline" ng-click="toggleSelection(t.value)">
+							<i ng-class="{true: 'fa fa-check-square-o', false: 'fa fa-square-o'}[selection.indexOf(t.value) > -1]"></i> {{t.name}}
+						</label>
 					</span>
 				</div>
 
-				<label>Food & Drink</label>
+				<label>Food &amp; Drink</label>
 				<div class="form-group">
-					<span ng-repeat="f in food"> <label class="checkbox-inline">
-							<input type="checkbox" value="{{f.value}}"
-							ng-checked="selection.indexOf(f.value) > -1"
-							ng-click="toggleSelection(f.value)" /> {{f.name}}
-					</label>
+					<span ng-repeat="f in food"> 
+						<label class="checkbox-inline" ng-click="toggleSelection(f.value)">
+							<i ng-class="{true: 'fa fa-check-square-o', false: 'fa fa-square-o'}[selection.indexOf(f.value) > -1]"></i> {{f.name}}
+						</label>
 					</span>
 				</div>
 
-				<label>Science & Technology</label>
+				<label>Science &amp; Technology</label>
 				<div class="form-group">
-					<span ng-repeat="s in science"> <label
-						class="checkbox-inline"> <input type="checkbox"
-							value="{{s.value}}" ng-checked="selection.indexOf(s.value) > -1"
-							ng-click="toggleSelection(s.value)" /> {{s.name}}
-					</label>
+					<span ng-repeat="s in science"> 
+						<label class="checkbox-inline" ng-click="toggleSelection(s.value)">
+							<i ng-class="{true: 'fa fa-check-square-o', false: 'fa fa-square-o'}[selection.indexOf(s.value) > -1]"></i> {{s.name}}
+						</label>
 					</span>
 				</div>
 
-				<label>Seasonal & Holiday</label>
+				<label>Seasonal &amp; Holiday</label>
 				<div class="form-group">
-					<span ng-repeat="h in holiday"> <label
-						class="checkbox-inline"> <input type="checkbox"
-							value="{{h.value}}" ng-checked="selection.indexOf(h.value) > -1"
-							ng-click="toggleSelection(h.value)" /> {{h.name}}
-					</label>
+					<span ng-repeat="h in holiday"> 
+						<label class="checkbox-inline" ng-click="toggleSelection(h.value)">
+							<i ng-class="{true: 'fa fa-check-square-o', false: 'fa fa-square-o'}[selection.indexOf(h.value) > -1]"></i> {{h.name}}
+						</label>
 					</span>
 				</div>
 
 				<button type="submit" class="btn btn-success"
 					ng-click="savePreferences()">Save</button>
 			</form>
-
-			<!-- SHOW OFF OUR FORMDATA OBJECT -->
-			<h2>Sample Form Object</h2>
-			<pre>
-        {{ selection }}
-    </pre>
-
 		</div>

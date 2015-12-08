@@ -1,7 +1,5 @@
 package wham;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URISyntaxException;
 
 import javax.ws.rs.GET;
@@ -10,13 +8,13 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 
-import wham.operation.EventOperation;
 import eventbrite.Credentials;
 import eventbrite.EventbriteClient;
 import eventbrite.exception.RequestException;
 import eventbrite.operation.EventRequest;
 import eventbrite.operation.EventsSearchResult;
 import eventbrite.operation.SearchRequest;
+import wham.operation.EventOperation;
 
 @Path("/event")
 public class EventResource extends ResourceBase {
@@ -95,14 +93,8 @@ public class EventResource extends ResourceBase {
     @GET
     @Path("check/{id}")
     public String checkEventExist(@PathParam("id") String id) {
-        try {
-            EventOperation operation = new EventOperation();
-            return String.valueOf(operation.eventExist(id));
-        } catch (Exception e) {
-            StringWriter sw = new StringWriter();
-            e.printStackTrace(new PrintWriter(sw));
-            return sw.toString();
-        }
+        EventOperation operation = new EventOperation();
+        return String.valueOf(operation.eventExist(id));
     }
 
 }
