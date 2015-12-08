@@ -376,7 +376,6 @@ whamApp.controller('eventDetailsController', function($rootScope, $routeParams,
 
 	$http(req).then(function(response) {
 		$scope.event = response.data;
-		console.log(JSON.stringify(response.data));
 	});
 
 	$scope.saveEvent = function() {
@@ -464,7 +463,6 @@ whamApp.controller('alreadySavedController', function($rootScope, $routeParams,
 				eId : eventId
 			};
 
-			console.log(data);
 
 			$http({
 				method : 'POST',
