@@ -4,6 +4,9 @@
 <html ng-app="whamApp">
 
 <head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- SCROLLS -->
 <script
 	src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
@@ -14,6 +17,9 @@
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="styles.css">
+<link href='https://fonts.googleapis.com/css?family=Raleway:400,800,600' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Shadows+Into+Light' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 <script src="http://mymaplist.com/js/vendor/TweenLite.min.js"></script>
 <!-- SPELLS -->
 <script
@@ -28,7 +34,8 @@
 	src="//rawgit.com/allenhwkim/angularjs-google-maps/master/build/scripts/ng-map.min.js"></script>
 <script src="./scripts/ui-bootstrap-tpls-0.14.3.min.js"></script>
 <script src="./scripts/angular-base64.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
 <script src="./scripts/angular-spinner.js"></script>
 <script src="./scripts/easy-social-share.js"></script>
 <script src="script.js"></script>
@@ -37,11 +44,13 @@
 <!-- define angular controller -->
 <body ng-controller="landingController" ng-init="showEventsAroundUser()">
 	<nav class="navbar navbar-default">
-		<div class="container">
-			<div class="col-md-6">
-				<div class="input-group search-controls" id="adv-search">
+		<div class="container-fluid">
+			<div class="col-md-2"><span class="app-logo">WHAM</span></div>
+			<div class="col-md-4">
+				<div class="input-group search-controls" id="adv-search"
+					style="width: 345px;">
 					<input type="text" class="form-control" ng-model="query"
-						placeholder="Enter Keywords (or click the dropdown for advanced search)" />
+						placeholder="Enter Keywords" />
 					<div class="input-group-btn">
 						<div class="btn-group" role="group">
 							<div class="dropdown dropdown-lg">
@@ -49,28 +58,29 @@
 									data-toggle="dropdown" aria-expanded="false">
 									<span class="caret"></span>
 								</button>
-								<div class="dropdown-menu dropdown-menu-right" role="menu">
+								<div class="dropdown-menu dropdown-menu-right" role="menu"
+									style="min-width: 345px;">
 									<form class="form-horizontal" role="form">
 										<div class="form-group">
 											<label for="filter">Category</label> <select
-												class="form-control"
-												ng-model="selectCategory"
+												class="form-control" ng-model="selectCategory"
 												ng-options="category as category.text for category in categories">
 											</select>
 										</div>
 										<div class="form-group">
-											<label for="contain">Location</label> <input class="form-control" ng-model="city"
-												type="text" googleplace/>
+											<label for="contain">Location</label> <input
+												class="form-control" ng-model="city" type="text" googleplace />
 										</div>
 										<button type="submit" class="btn btn-primary"
-											ng-click=advancedSearch(selectCategory) ng-controller="searchController">
+											ng-click=advancedSearch(selectCategory)
+											ng-controller="searchController">
 											<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 										</button>
 									</form>
 								</div>
 							</div>
-							<button class="btn btn-primary" type="submit" ng-click=search(query)
-								ng-controller="searchController">
+							<button class="btn btn-primary" type="submit"
+								ng-click=search(query) ng-controller="searchController">
 								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
 							</button>
 						</div>
@@ -79,10 +89,17 @@
 			</div>
 			<div class="col-md-6">
 				<ul class="nav navbar-nav navbar-right">
-					<li ng-show="!currentUser"><a href="#login"><i class="fa fa-sign-in"></i> Login</a></li>
-					<li ng-show="currentUser" ng-click="logout()"><a href="#login"><i class="fa fa-sign-out"></i> Log Out</a></li>
+					<li ng-show="!currentUser"><a href="#login"><i
+							class="fa fa-sign-in"></i> Login</a></li>
+					<li ng-show="currentUser" ng-click="logout()"><a href="#login"><i
+							class="fa fa-sign-out"></i> Log Out</a></li>
 					<li><a href="#landing"><i class="fa fa-home"></i> Home</a></li>
-					<li ng-show="currentUser"><a href="#stuff"><i class="fa fa-diamond"></i></i> My Stuff</a></li>
+					<li ng-show="currentUser"><a href="#myEvents"><i
+							class="fa fa-child"></i> My Events</a></li>
+					<li ng-show="currentUser"><a href="#stuff"><i
+							class="fa fa-diamond"></i></i> My Stuff</a></li>
+					<li ng-show="currentUser"><a href="#history"><i
+							class="fa fa-history"></i></i> History</a></li>
 					<li><a href="#contact"><i class="fa fa-comment"></i>
 							Contact</a></li>
 				</ul>

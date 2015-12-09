@@ -55,7 +55,7 @@ public class RequestTest extends TestBase {
     @Test
     public void testEventSearchRequestWithCategories() throws URISyntaxException, RequestException {
         SearchRequest request = new SearchRequest();
-        request.setSubCategories(new String[] { "Rock", "Wine" });
+        request.setSubCategories("3017,10002".split(","));
         assertEquals("https://www.eventbriteapi.com/v3/events/search?subcategories=3017%2C10002",
                 request.getUri().toString());
     }

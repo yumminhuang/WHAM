@@ -128,7 +128,7 @@ public class SearchRequest extends BaseRequest {
     public void setSubCategories(String[] subcategories) {
         this.subcategories = new int[subcategories.length];
         for (int i = 0; i < subcategories.length; i++)
-            this.subcategories[i] = Category.getCategoryID(subcategories[i]);
+            this.subcategories[i] = Integer.parseInt(subcategories[i]);
     }
 
     public void setCategory(String category) {
